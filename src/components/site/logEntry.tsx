@@ -255,7 +255,7 @@ return (
 <TableBody>
 	{data.map((data, index) => (
 		<TableRow key={index}>
-			<TableCell> {new Date(data.timestamp).toLocaleDateString("en-MY")}</TableCell>
+			<TableCell> <Badge>{new Date(data.timestamp).toLocaleDateString("en-MY")}</Badge><Badge>{new Date(data.timestamp).getHours()}: {new Date(data.timestamp).getMinutes()}</Badge></TableCell>
 			<TableCell>{data.odometer}</TableCell>
 			<TableCell className="items-center text-center">{<div><Badge style={data.ron === "RON95" ? {backgroundColor:'yellow', color:'black', borderColor:'black', borderRadius:0} : {backgroundColor:'lightgreen', color:'black', borderColor:'black', borderRadius:0}}>{data.ron}</Badge><Badge variant="outline" style={{border:'none'}}>RM {data.price}</Badge></div>}</TableCell>
 			<TableCell className="text-right">{<div><Badge variant="outline">{data.amountLitre.toFixed(2)} L : RM {data.amountRM}</Badge></div>}</TableCell>
