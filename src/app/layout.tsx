@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const fontSans = FontSans({
+const fontSans = FontSans({
 	subsets: ["latin"],
 	variable: "--font-sans",
   })
