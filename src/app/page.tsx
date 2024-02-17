@@ -1,4 +1,3 @@
-import { CardDemo } from "@/components/site/demo";
 import { LogEntry } from "@/components/site/logEntry";
 
 export default function Home() {
