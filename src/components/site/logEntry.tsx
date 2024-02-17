@@ -389,7 +389,7 @@ return (
 	<div className="flex flex-row-reverse gap-2">
     {Array.from({length: Math.ceil(data.length / recordsPerPage)}, (_, i) => Math.ceil(data.length / recordsPerPage) - i)
         .map(pageNumber => (
-            <Button size="icon" onClick={() => paginate(pageNumber)}>{pageNumber}</Button>
+            <Button key={pageNumber} size="icon" onClick={() => paginate(pageNumber)}>{pageNumber}</Button>
         ))
     }
 </div>
