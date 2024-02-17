@@ -205,6 +205,7 @@ export function LogEntry() {
 		loadSetting();
 		loadData();
 		fetchPrice("none");
+// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[])
 
 	useEffect(() => {
