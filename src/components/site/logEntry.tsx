@@ -19,45 +19,16 @@ import {
 } from "@/components/ui/tabs"
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group"
 import { Separator } from "../ui/separator"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion"
 import { Badge } from "../ui/badge"
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "../ui/table"
-import { toast } from "sonner"
+import { Toaster, toast } from "sonner"
+import { ReloadIcon } from "@radix-ui/react-icons"
+import { addData, defaultData, defaultSetting, deleteData, getData, getSetting, updateRon, updateUnit } from "@/lib/localstorage"
+import { ScrollArea } from "../ui/scroll-area"
 
-const setting = {
-	odometer  : "000000",
-	ron : "RON95",
-	unit : "RM",
-	preset_rm : {
-		1 : "RM 10",
-		2 : "RM 20",
-		3 : "RM 50",
-		4 : "RM 100",
-		5 : "Other"
-	},
-	preset_litre : {
-		1 : "10 L",
-		2 : "20 L",
-		3 : "50 L",
-		4 : "100 L",
-		5 : "Other"
-	}
-}
 
-const price = {
-	RON95 : 2.05,
-	RON97 : 3.05
-}
-
-const defdata = [{
-	timestamp : 0 as unknown as Date,
-	odometer : 0,
-	ron : "RON95",
-	price : 2.05,
-	amountRM : 10,
-	amountLitre : 5
-}]
 
 export function LogEntry() {
 
@@ -65,57 +36,176 @@ export function LogEntry() {
 	const [inputAmount, setAmount]	= useState(0)
 	const [inputRM, setInputRM]		= useState(0)
 	const [inputLitre, setInputLitre]	= useState(0)
-	const [selectedRon, setSelectedRon] = useState(setting.ron)
+	const [selectedRon, setSelectedRon] = useState("")
 	const [selectedPreset, selectPreset] = useState("")
 	const [selectedValue, setSelectedValue] = useState("")
 	const [showCustom, setShowCustom] = useState(false)
+	const [priceData, setPriceData] = useState({
+		dateUpdated : 0,
+		RON95 : 0,
+		RON97 : 0
+	})
+	const [settingData, setSettingData] = useState(
+		{
+			ron : "",
+			unit : "",
+			preset : {
+				1 : 0,
+				2 : 0,
+				3 : 0,
+				4 : 0,
+				5 : 0
+			}
+		}
+	)
 
 	const [preset, setPreset] = useState({
-		1 : "RM 10",
-		2 : "RM 20",
-		3 : "RM 50",
-		4 : "RM 100",
-		5 : "Other"
+		1 : "",
+		2 : "",
+		3 : "",
+		4 : "",
+		5 : ""
 	})
 
-	const [data, setData] = useState(defdata)
+	const [data, setData] = useState(defaultData)
+	const [currentPage, setCurrentPage] = useState(1);
+	const [recordsPerPage] = useState(5);
+	const reversedData = [...data].reverse();
+	const indexOfLastRecord = currentPage * recordsPerPage;
+	const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+	const currentRecords = reversedData.slice(indexOfFirstRecord, indexOfLastRecord);
+	
+	const paginate = (pageNumber: SetStateAction<number>) => setCurrentPage(pageNumber);
+
+
+
+
+
+
+
+
+
+	useEffect(() => {
+		if (data.length > 0) {
+			setOdonto(data[data.length - 1].odometer)
+		}
+	},[data])
 
 	function initAdd() {
 		if (inputOdonto == 0) {
 			toast("Odometer cannot be empty.")
 			return
 		}
+		if (selectedValue == "") {
+			toast("Please select an amount.")
+			return
+		}
+
+		if (data[data.length - 1] != undefined) {
+			if (inputOdonto <= data[data.length - 1].odometer ) {
+				toast("Odometer reading cannot be same or lower than previous record.")
+			return
+		}}
+
 		const hariIni = new Date()
-		setData([...data, {
+		const draftData = {
 			timestamp : hariIni,
 			odometer : inputOdonto,
 			ron : selectedRon,
-			price : price[selectedRon as keyof typeof price],
+			price : priceData[selectedRon as keyof typeof priceData],
 			amountRM : inputRM,
 			amountLitre : inputLitre
-		}])
+		}
+		setData([...data, draftData])
+		addData(draftData)
 		toast("Fueling record has been created.")
-
+		setSelectedValue("")
 	}
-	
-	function togglePreset(e : string) {
-		if (e == "RM") {
-			setPreset(setting.preset_rm)
-			selectPreset("RM")
-		} else if (e == "L") {
-			setPreset(setting.preset_litre)
-			selectPreset("L")
+
+	async function fetchPrice(tsoast : string) {
+		const response = await fetch("https://api.data.gov.my/data-catalogue/?id=fuelprice&sort=-date&limit=1")
+		const data = await response.json()
+		setPriceData({
+			dateUpdated : data[0].date,
+			RON95 : data[0].ron95,
+			RON97 : data[0].ron97
+		})
+		if (tsoast != "none") {
+		toast.success("Fuel price has been updated. Latest data fetched : " + data[0].date + " (https://data.gov.my)" )
 		}
 	}
 
 
+	
+	function togglePreset(e : string) {
+		if (e == "RM") {
+			setPreset(
+				{
+					1 : "RM " + settingData.preset[1],
+					2 : "RM " + settingData.preset[2],
+					3 : "RM " + settingData.preset[3],
+					4 : "RM " + settingData.preset[4],
+					5 : "Other"
+				}
+			)
+			selectPreset("RM")
+		} else if (e == "L") {
+			setPreset(
+				{
+					1 : settingData.preset[1] + " L",
+					2 : settingData.preset[2] + " L",
+					3 : settingData.preset[3] + " L",
+					4 : settingData.preset[4] + " L",
+					5 : "Other"
+				}
+			)
+						selectPreset("L")
+		}
+	}
+
+	function loadSetting() {
+		getSetting()
+		.then((data) => {
+			setSettingData(data)
+			setSelectedRon(data.ron)
+			togglePreset(data.unit)
+			if (data.unit == "RM") {
+				setPreset(
+					{
+						1 : "RM " + data.preset[1],
+						2 : "RM " + data.preset[2],
+						3 : "RM " + data.preset[3],
+						4 : "RM " + data.preset[4],
+						5 : "Other"
+					}
+				)} else if (data.unit == "L") {
+			setPreset(
+				{
+					1 : data.preset[1] + " L",
+					2 : data.preset[2] + " L",
+					3 : data.preset[3] + " L",
+					4 : data.preset[4] + " L",
+					5 : "Other"
+				}
+			)}
+		})
+		.catch((err) => {
+			console.error(err)
+		})
+	}
+
+	function loadData() {
+		getData()
+		.then((data) => {
+			setData(data)
+		})
+	}
 
 	useEffect(() => {
-		if (setting.unit == "RM") {
-			togglePreset("RM")
-		} else if (setting.unit == "L") {
-			togglePreset("L")
-	}},[])
+		loadSetting();
+		loadData();
+		fetchPrice("none");
+	},[])
 
 	useEffect(() => {
 		switch (selectedValue) {
@@ -144,21 +234,34 @@ export function LogEntry() {
 		if (selectedPreset == "RM") {
 			setInputRM(inputAmount)
 			if (selectedRon == "RON95") {
-				setInputLitre(parseFloat((inputAmount / price.RON95).toFixed(2)))
+				setInputLitre(parseFloat((inputAmount / priceData.RON95).toFixed(2)))
 			} else if (selectedRon == "RON97") {
-				setInputLitre(parseFloat((inputAmount / price.RON97).toFixed(2)))
+				setInputLitre(parseFloat((inputAmount / priceData.RON97).toFixed(2)))
 			}
 			
 		} else if (selectedPreset == "L") {
 			setInputLitre(inputAmount)
 			if (selectedRon == "RON95") {
-				setInputRM(parseFloat((inputAmount * price.RON95).toFixed(2)))
+				setInputRM(parseFloat((inputAmount * priceData.RON95).toFixed(2)))
 			} else if (selectedRon == "RON97") {
-				setInputRM(parseFloat((inputAmount * price.RON97).toFixed(2)))
+				setInputRM(parseFloat((inputAmount * priceData.RON97).toFixed(2)))
 			}
 		}
 
-	},[inputAmount, selectedPreset, selectedRon])
+	},[inputAmount, selectedPreset, selectedRon, priceData])
+
+	function getAverageFuelConsumption() {
+		if (data.length > 1) {
+			const totalKm = data[data.length - 1].odometer - data[0].odometer
+			const totalLitre = data.slice(1).map((data) => data.amountLitre).reduce((a, b) => a + b, 0);
+			return (totalKm / totalLitre).toFixed(2)
+		
+		} else {
+			return "0.00"
+		}
+	
+	
+	}
 
 	
 return (
@@ -175,30 +278,35 @@ return (
         			<CardTitle>New Fueling</CardTitle>
         		</CardHeader>
           	<CardContent className="space-y-2">
-			  <div className="flex justify-center items-center space-x-4 rounded-md border p-4">
-						<div className="flex flex-col gap-1">
-						<div><Badge>RON 95</Badge><Badge variant={"outline"}>RM {price.RON95} /L</Badge></div>
-						<div><Badge>RON 97</Badge><Badge variant={"outline"}>RM {price.RON97} /L</Badge></div>
+			  <div className="flex flex-row justify-around items-center space-x-4 rounded-md border p-4">
+						<div className="flex flex-col">
+							<div><Badge className="rounded-r-none"  style={{backgroundColor:"yellow", color:"black",borderColor:"black"}}>RON 95</Badge><Badge variant={"outline"} className="rounded-l-none">{ priceData.RON95 != 0 ? "RM " + priceData.RON95 + " /L" : "Loading.." }</Badge></div>
+							<div><Badge className="rounded-r-none"  style={{backgroundColor:"lightgreen", color:"black",borderColor:"black"}}>RON 97</Badge><Badge variant={"outline"} className="rounded-l-none">{ priceData.RON97 != 0 ? "RM " + priceData.RON97 + " /L" : "Loading.." }</Badge></div>
 						</div>
-						<div><Badge variant={"destructive"} style={{backgroundColor:"green"}}>Update</Badge></div>
-				    </div> 
+						{/* <div><Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Updating..</Button></div> */}
+						<div><Button size="sm" onClick={() => fetchPrice("")}>Update</Button></div>		
+				    	</div> 
 
             
-			<div className="space-y-1">
+			<div className="space-y-1 py-4">
 				<Label htmlFor="name">Odometer</Label>
-				<Input autoFocus type="number" id="odometer" placeholder={setting.odometer} value={inputOdonto} onChange={(e) => setOdonto(Number(e.target.value))} />
+				<Input autoFocus type="number" id="odometer" value={inputOdonto} onChange={(e) => setOdonto(Number(e.target.value))} />
 			</div>
 
 
-			<div className="flex justify-between">
+			<div className="flex justify-between pt-4">
 				<div>
-				<ToggleGroup type="single" size="sm" defaultValue={selectedRon} onValueChange={(e) => setSelectedRon(e)}>
+				<ToggleGroup type="single" size="sm" value={selectedRon} onValueChange={(e) => {
+					setSelectedRon(e)
+					updateRon(e)}}>
 					<ToggleGroupItem value="RON95">RON95</ToggleGroupItem>
 					<ToggleGroupItem value="RON97">RON97</ToggleGroupItem>
 				</ToggleGroup>
 				</div>
 				<div>
-				<ToggleGroup type="single" size="sm" defaultValue={setting.unit} onValueChange={(e) => togglePreset(e)}>
+				<ToggleGroup type="single" size="sm" value={selectedPreset} onValueChange={(e) => {
+					togglePreset(e)
+					updateUnit(e)}}>
 					<ToggleGroupItem value="RM">RM</ToggleGroupItem>
 					<ToggleGroupItem value="L">Litre</ToggleGroupItem>
 				</ToggleGroup>
@@ -241,10 +349,21 @@ return (
               Data is everything.
             </CardDescription>
           </CardHeader>
+		  
+
           <CardContent className="space-y-2">
 
+		  <div className="flex flex-row justify-around items-center space-x-4 rounded-md border p-4">
+						<div className="flex flex-col">
+						<h1 className="text-center text-5xl">{getAverageFuelConsumption()}</h1>
+
+							<h1 className="text-center">km/litre</h1>
+</div>
+				    	</div> 
+			
+
 		  <Table className="w-[600px]">
-      <TableHeader>
+      		<TableHeader>
         <TableRow>
           <TableHead>Date & Time</TableHead>
           <TableHead>Odometer</TableHead>
@@ -253,33 +372,40 @@ return (
         </TableRow>
       </TableHeader>
 <TableBody>
-	{data.map((data, index) => (
-		<TableRow key={index}>
-			<TableCell> <Badge>{new Date(data.timestamp).toLocaleDateString("en-MY")}</Badge><Badge>{new Date(data.timestamp).getHours()}: {new Date(data.timestamp).getMinutes()}</Badge></TableCell>
-			<TableCell>{data.odometer}</TableCell>
-			<TableCell className="items-center text-center">{<div><Badge style={data.ron === "RON95" ? {backgroundColor:'yellow', color:'black', borderColor:'black', borderRadius:0} : {backgroundColor:'lightgreen', color:'black', borderColor:'black', borderRadius:0}}>{data.ron}</Badge><Badge variant="outline" style={{border:'none'}}>RM {data.price}</Badge></div>}</TableCell>
-			<TableCell className="text-right">{<div><Badge variant="outline">{data.amountLitre.toFixed(2)} L : RM {data.amountRM}</Badge></div>}</TableCell>
-		</TableRow>
-	))}
-</TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Mileage</TableCell>
-          <TableCell className="text-right">15.3 km/l</TableCell>
+{currentRecords.map((data, index) => (
+        <TableRow key={index} onClick={(e) => {
+			deleteData(data.timestamp)
+			loadData();
+			}}>
+            <TableCell className="flex flex-col justify-center items-center text-left"><div className=""><Badge>{new Date(data.timestamp).toLocaleDateString("en-MY")}</Badge><Badge className="flex-grow">{new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Badge></div></TableCell>
+            <TableCell className="items-center text-center">{data.odometer}</TableCell>
+            <TableCell className="items-center text-center">{<div><Badge style={data.ron === "RON95" ? {backgroundColor:'yellow', color:'black', borderColor:'black'} : {backgroundColor:'lightgreen', color:'black', borderColor:'black'}}>{data.ron}</Badge><Badge variant="outline" style={{border:'none'}}>RM {data.price}</Badge></div>}</TableCell>
+            <TableCell className="text-right">{<div><Badge variant="outline">{data.amountLitre.toFixed(2)} L : RM {data.amountRM}</Badge></div>}</TableCell>
         </TableRow>
-      </TableFooter>
+))}
+</TableBody>
     </Table>
-           
+	<div className="flex flex-row-reverse gap-2">
+    {Array.from({length: Math.ceil(data.length / recordsPerPage)}, (_, i) => Math.ceil(data.length / recordsPerPage) - i)
+        .map(pageNumber => (
+            <Button size="icon" onClick={() => paginate(pageNumber)}>{pageNumber}</Button>
+        ))
+    }
+</div>
+			
 		   
 
 
           </CardContent>
           <CardFooter>
-            <Button>Save password</Button>
+
           </CardFooter>
         </Card>
       </TabsContent>
+	  <Toaster richColors  />
 
     </Tabs>
+
+	
   )
 }
