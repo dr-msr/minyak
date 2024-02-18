@@ -107,14 +107,24 @@ export function LogEntry() {
 			return
 		}}
 
+		var trip = 0
+		if (data.length > 0) {
+			trip = inputOdonto - data[data.length - 1].odometer
+		}
+			
+
+	
+
+
 		const hariIni = new Date()
 		const draftData = {
 			timestamp : hariIni,
 			odometer : inputOdonto,
+			trip : trip,
 			ron : selectedRon,
 			price : priceData[selectedRon as keyof typeof priceData],
 			amountRM : inputRM,
-			amountLitre : inputLitre
+			amountLitre : inputLitre,
 		}
 		setData([...data, draftData])
 		addData(draftData)
@@ -276,26 +286,17 @@ return (
     	<TabsContent value="log">
     		<Card>
         		<CardHeader>
-        			<CardTitle>New Fueling</CardTitle>
+        			<CardTitle>Isi Minyak</CardTitle>
         		</CardHeader>
           	<CardContent className="space-y-2">
-			  <div className="flex flex-row justify-around items-center space-x-4 rounded-md border p-4">
-						<div className="flex flex-col">
-							<div><Badge className="rounded-r-none"  style={{backgroundColor:"yellow", color:"black",borderColor:"black"}}>RON 95</Badge><Badge variant={"outline"} className="rounded-l-none">{ priceData.RON95 != 0 ? "RM " + priceData.RON95 + " /L" : "Loading.." }</Badge></div>
-							<div><Badge className="rounded-r-none"  style={{backgroundColor:"lightgreen", color:"black",borderColor:"black"}}>RON 97</Badge><Badge variant={"outline"} className="rounded-l-none">{ priceData.RON97 != 0 ? "RM " + priceData.RON97 + " /L" : "Loading.." }</Badge></div>
-						</div>
-						{/* <div><Button disabled><ReloadIcon className="mr-2 h-4 w-4 animate-spin" />Updating..</Button></div> */}
-						<div><Button size="sm" onClick={() => fetchPrice("")}>Update</Button></div>		
-				    	</div> 
-
-            
-			<div className="space-y-1 py-4">
+      
+			<div className="space-y-1 text-center">
 				<Label htmlFor="name">Odometer</Label>
-				<Input autoFocus type="number" id="odometer" value={inputOdonto} onChange={(e) => setOdonto(Number(e.target.value))} />
+				<Input style={{textAlign:"center", fontSize:28, padding:5}} autoFocus type="number" id="odometer" value={inputOdonto} onChange={(e) => setOdonto(Number(e.target.value))} />
 			</div>
 
 
-			<div className="flex justify-between pt-4">
+			<div className="flex justify-between">
 				<div>
 				<ToggleGroup type="single" size="sm" value={selectedRon} onValueChange={(e) => {
 					setSelectedRon(e)
@@ -317,7 +318,7 @@ return (
 			<Separator className="my-4" />
 
 			<div>
-				<ToggleGroup type="single" size="sm" aria-required="true" className="flex justify-between" onValueChange={ (e) => setSelectedValue(e)}>
+				<ToggleGroup type="single" size="sm" aria-required="true" className="flex justify-between" value={selectedValue} onValueChange={ (e) => setSelectedValue(e)}>
 					<ToggleGroupItem value="1">{preset[1]}</ToggleGroupItem>
 					<ToggleGroupItem value="2">{preset[2]}</ToggleGroupItem>
 					<ToggleGroupItem value="3">{preset[3]}</ToggleGroupItem>
@@ -337,10 +338,22 @@ return (
 
           </CardContent>
           <CardFooter>
-            <Button onClick={() => initAdd()} style={{textAlign:"center"}}>Save changes</Button>
-          </CardFooter>
+				<div className="flex flex-col w-full gap-2 mt-2">
+
+					<div className="flex flex-row">
+						<div className="flex-grow flex-row">
+							<Badge className="rounded-r-none px-1" style={{backgroundColor:"yellow", color:"black",borderColor:"black"}}>RON95</Badge><Badge variant={"outline"} className="rounded-none" style={{borderColor:"black"}}>{ priceData.RON95 != 0 ? "RM " + priceData.RON95 + "/L" : "Loading.." }</Badge>
+							<Badge className="rounded-none px-1" style={{backgroundColor:"lightgreen", color:"black",borderColor:"black"}}>RON97</Badge><Badge variant={"outline"} className="rounded-l-none" style={{borderColor:"black"}}>{ priceData.RON97 != 0 ? "RM " + priceData.RON97 + "/L" : "Loading.." }</Badge>
+						</div>
+						<div className=""><Badge onClick={() => fetchPrice("")}>Update</Badge></div>	
+					</div>	
+
+            		<Button onClick={() => initAdd()} style={{textAlign:"center"}}>Log Entry</Button>
+
+				</div>
+    	    </CardFooter>
         </Card>
-      </TabsContent>
+    </TabsContent>
 
       <TabsContent value="dashboard">
         <Card>
@@ -363,13 +376,14 @@ return (
 				    	</div> 
 			
 
-		  <Table className="w-[600px]">
+		  <Table className="w-[700px]">
       		<TableHeader>
         <TableRow>
           <TableHead>Date & Time</TableHead>
           <TableHead>Odometer</TableHead>
           <TableHead className="w-[150px] text-center">RON & Price</TableHead>
 		  <TableHead className="w-[180px] text-right">Amount & Cost </TableHead>
+		  <TableHead className="w-[180px] text-right">Consumption (Trip) </TableHead>
         </TableRow>
       </TableHeader>
 <TableBody>
@@ -378,10 +392,11 @@ return (
 			deleteData(data.timestamp)
 			loadData();
 			}}>
-            <TableCell className="flex flex-col justify-center items-center text-left"><div className=""><Badge>{new Date(data.timestamp).toLocaleDateString("en-MY")}</Badge><Badge className="flex-grow">{new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Badge></div></TableCell>
-            <TableCell className="items-center text-center">{data.odometer}</TableCell>
+            <TableCell className="flex flex-col justify-center items-center text-left"><div className=""><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleDateString("en-MY")}</Badge><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Badge></div></TableCell>
+            <TableCell className="items-center text-center"><Badge>{data.odometer}</Badge></TableCell>
             <TableCell className="items-center text-center">{<div><Badge style={data.ron === "RON95" ? {backgroundColor:'yellow', color:'black', borderColor:'black'} : {backgroundColor:'lightgreen', color:'black', borderColor:'black'}}>{data.ron}</Badge><Badge variant="outline" style={{border:'none'}}>RM {data.price}</Badge></div>}</TableCell>
             <TableCell className="text-right">{<div><Badge variant="outline">{data.amountLitre.toFixed(2)} L : RM {data.amountRM}</Badge></div>}</TableCell>
+            <TableCell className="text-right">{<div><Badge variant="destructive">{( (data.trip != 0) ? (data.trip / data.amountLitre).toFixed(2) + " km/L" : "0 km/L")}</Badge></div>}<Badge variant="outline">{( (data.trip != 0) ? (data.trip + " km") : "0 km")}</Badge></TableCell>
         </TableRow>
 ))}
 </TableBody>

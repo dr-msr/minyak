@@ -3,11 +3,11 @@ import { toast } from "sonner";
 export type Data = {
 	timestamp : Date;
 	odometer : number;
+	trip : number;
 	ron : string;
 	price : number;
 	amountRM : number;
 	amountLitre : number;
-
 }
 
 export type Setting = {
@@ -26,9 +26,10 @@ export const defaultData = [{
 	timestamp : 0 as unknown as Date,
 	odometer : 0,
 	ron : "RON95",
+	trip : 0,
 	price : 2.05,
 	amountRM : 10,
-	amountLitre : 5
+	amountLitre : 5,
 }]
 
 export const defaultSetting = {
