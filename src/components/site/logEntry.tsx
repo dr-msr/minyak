@@ -369,7 +369,7 @@ return (
 
           <CardContent className="space-y-2">
 
-				<div><AnalyticsCard data={data} /></div>
+				{ (data.length > 0) && <div><AnalyticsCard data={data} /></div> }
 
 		  <Table className="w-[700px]">
       		<TableHeader>
