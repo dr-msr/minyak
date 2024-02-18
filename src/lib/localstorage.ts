@@ -8,6 +8,7 @@ export type Data = {
 	price : number;
 	amountRM : number;
 	amountLitre : number;
+	consumption : number;
 }
 
 export type Setting = {
@@ -30,6 +31,7 @@ export const defaultData = [{
 	price : 2.05,
 	amountRM : 10,
 	amountLitre : 5,
+	consumption : 0,
 }]
 
 export const defaultSetting = {

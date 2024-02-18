@@ -27,6 +27,7 @@ import { Toaster, toast } from "sonner"
 import { ReloadIcon } from "@radix-ui/react-icons"
 import { addData, defaultData, defaultSetting, deleteData, getData, getSetting, updateRon, updateUnit } from "@/lib/localstorage"
 import { ScrollArea } from "../ui/scroll-area"
+import { AnalyticsCard } from "../analytics"
 
 
 
@@ -107,10 +108,21 @@ export function LogEntry() {
 			return
 		}}
 
-		var trip = 0
+		var firstTrip = true
 		if (data.length > 0) {
+			firstTrip = false
+		}
+
+		var trip = 0
+		if (!firstTrip) {
 			trip = inputOdonto - data[data.length - 1].odometer
 		}
+
+		var consumption = 0
+		if (!firstTrip) {
+			consumption = trip / data[data.length - 1].amountLitre
+		}
+
 			
 
 	
@@ -125,10 +137,11 @@ export function LogEntry() {
 			price : priceData[selectedRon as keyof typeof priceData],
 			amountRM : inputRM,
 			amountLitre : inputLitre,
+			consumption : consumption
 		}
 		setData([...data, draftData])
 		addData(draftData)
-		toast("Fueling record has been created.")
+		!firstTrip ? toast.success("Fueling record has been created. You has completed " + trip + "km journey with " + consumption.toFixed(2) + " km/L fuel consumption.") : toast.success("Fueling record has been created.")
 		setSelectedValue("")
 	}
 
@@ -261,18 +274,7 @@ export function LogEntry() {
 
 	},[inputAmount, selectedPreset, selectedRon, priceData])
 
-	function getAverageFuelConsumption() {
-		if (data.length > 1) {
-			const totalKm = data[data.length - 1].odometer - data[0].odometer
-			const totalLitre = data.slice(1).map((data) => data.amountLitre).reduce((a, b) => a + b, 0);
-			return (totalKm / totalLitre).toFixed(2)
-		
-		} else {
-			return "0.00"
-		}
 	
-	
-	}
 
 	
 return (
@@ -367,14 +369,7 @@ return (
 
           <CardContent className="space-y-2">
 
-		  <div className="flex flex-row justify-around items-center space-x-4 rounded-md border p-4">
-						<div className="flex flex-col">
-						<h1 className="text-center text-5xl">{getAverageFuelConsumption()}</h1>
-
-							<h1 className="text-center">km/litre</h1>
-</div>
-				    	</div> 
-			
+				<div><AnalyticsCard data={data} /></div>
 
 		  <Table className="w-[700px]">
       		<TableHeader>
@@ -396,7 +391,7 @@ return (
             <TableCell className="items-center text-center"><Badge>{data.odometer}</Badge></TableCell>
             <TableCell className="items-center text-center">{<div><Badge style={data.ron === "RON95" ? {backgroundColor:'yellow', color:'black', borderColor:'black'} : {backgroundColor:'lightgreen', color:'black', borderColor:'black'}}>{data.ron}</Badge><Badge variant="outline" style={{border:'none'}}>RM {data.price}</Badge></div>}</TableCell>
             <TableCell className="text-right">{<div><Badge variant="outline">{data.amountLitre.toFixed(2)} L : RM {data.amountRM}</Badge></div>}</TableCell>
-            <TableCell className="text-right">{<div><Badge variant="destructive">{( (data.trip != 0) ? (data.trip / data.amountLitre).toFixed(2) + " km/L" : "0 km/L")}</Badge></div>}<Badge variant="outline">{( (data.trip != 0) ? (data.trip + " km") : "0 km")}</Badge></TableCell>
+            <TableCell className="text-right">{<div><Badge variant="destructive">{( (data.trip != 0) ? data.consumption.toFixed(1) + " km/L" : "0 km/L")}</Badge></div>}<Badge variant="outline">{( (data.trip != 0) ? (data.trip + " km") : "0 km")}</Badge></TableCell>
         </TableRow>
 ))}
 </TableBody>
