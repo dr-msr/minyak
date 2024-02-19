@@ -8,8 +8,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Data } from "@/lib/localstorage"
 import { LineChart, List, ListItem } from '@tremor/react';
+import { Data } from "@/lib/types";
 
 
 
