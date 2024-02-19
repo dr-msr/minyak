@@ -1,52 +1,17 @@
 import { toast } from "sonner";
+import { defaultData, defaultSetting } from "./defaults";
+import { Data, Setting } from "./types";
 
-export type Data = {
-	timestamp : Date;
-	odometer : number;
-	trip : number;
-	ron : string;
-	price : number;
-	amountRM : number;
-	amountLitre : number;
-	consumption : number;
-}
-
-export type Setting = {
-	ron : string;
-	unit : string;
-	preset : {
-		1 : number;
-		2 : number;
-		3 : number;
-		4 : number;
-		5 : number;
-	};
-}
-
-export const defaultData = [{
-	timestamp : 0 as unknown as Date,
-	odometer : 0,
-	ron : "RON95",
-	trip : 0,
-	price : 2.05,
-	amountRM : 10,
-	amountLitre : 5,
-	consumption : 0,
-}]
-
-export const defaultSetting = {
-    ron : "RON95",
-    unit : "RM",
-    preset : {
-        1 : "10",
-        2 : "20",
-        3 : "50",
-        4 : "100",
-        5 : "Other"
-    },
-}
-
-
+export async function getPrice() {
+	try {
+	  const response = await fetch("https://api.data.gov.my/data-catalogue/?id=fuelprice&sort=-date&limit=1");
+	  const data = await response.json();
+	  return data[0];
+	} catch (error) {
+	  console.error(error);
+	  return null;
+	}
+  }
 
 export async function getSetting() {
 	let settingString = localStorage.getItem('setting');
@@ -55,7 +20,6 @@ export async function getSetting() {
 		localStorage.setItem('setting', settingString);
 	}
 	return JSON.parse(settingString);
-
 }
 
 export async function updateSetting(setting : Setting) {
@@ -114,16 +78,11 @@ export async function getData() {
 export async function deleteData(timestamp: Date) {
     let dataString = localStorage.getItem('data');
     let dataArray = dataString ? JSON.parse(dataString) : [];
-
-    // Find the index of the data with the given timestamp
     let index = dataArray.findIndex((data: Data) => data.timestamp === timestamp);
 
-    // If the data was found, ask for confirmation before deleting
     if (index !== -1) {
         if (window.confirm('Are you sure you want to delete this data?')) {
             dataArray.splice(index, 1);
-
-            // Save the updated array back to local storage
             localStorage.setItem('data', JSON.stringify(dataArray));
         }
     }
