@@ -127,8 +127,8 @@ export const AnalyticsCard : React.FC<AnalyticsProps> = (input) => {
 		  
     
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious style={{display:"none"}} />
+      <CarouselNext style={{display:"none"}}  />
     </Carousel>
   )
 }
