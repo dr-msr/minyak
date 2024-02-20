@@ -1,3 +1,5 @@
+import { Data } from "@/data/version"
+
 export const defaultPrice = {
 	dateUpdated : "19 Feb 2024 (Offline)",
 	RON95 : 2.05,
@@ -24,4 +26,23 @@ export const defaultSetting = {
         3 : 50,
         4 : 100,
     },
+}
+
+export const defaultDataV001 : Data = {
+	Version : "0.0.1",
+	Setting : {
+		ron : "RON95",
+		unit : "RM",
+		preset : {
+			1 : 10,
+			2 : 30,
+			3 : 50,
+			4 : 100,
+		}},
+	Log : [],
+	PriceData : [{
+		dateUpdated : "2024-01-01",
+		RON95 : 2.05,
+		RON97 : 3.47,
+	}]
 }

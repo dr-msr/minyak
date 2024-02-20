@@ -1,4 +1,3 @@
-import { addData, updateRon, updateUnit } from "@/lib/localstorage"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
@@ -8,18 +7,22 @@ import { Separator } from "../ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
-import { Data, PriceData, Setting } from "@/lib/types"
-import { defaultSetting } from "@/lib/defaults"
+import { useData } from "@/data/context"
+import { getPrice } from "@/lib/localstorage"
+import generateUniqueId from 'generate-unique-id'
 
-interface LogEntryProps {
-	data : Data[],
-	settingData : Setting,
-	priceData : PriceData,
-	updateData : (data : Data) => void,
-	fetchPrice : () => void
-}
 
-export const LogEntry: React.FC<LogEntryProps> = ({data, settingData, priceData, updateData, fetchPrice}) => {
+
+
+export const LogEntry = () => {
+
+	const context = useData();
+	const data = context.data.Log
+	const settingData = context.data.Setting
+	const priceData = context.data.PriceData[0]
+
+
+	
 	const [inputOdonto, setOdonto]	= useState(0)
 	const [selectedRon, setSelectedRon] = useState("")
 	const [selectedPreset, selectPreset] = useState("")
@@ -75,18 +78,25 @@ export const LogEntry: React.FC<LogEntryProps> = ({data, settingData, priceData,
 
 
 		const hariIni = new Date()
+		const id2 = generateUniqueId({
+			length: 6,
+			useLetters: true
+		  });
+
 		const draftData = {
+
+			id : id2,
 			timestamp : hariIni,
 			odometer : inputOdonto,
 			trip : trip,
 			ron : selectedRon,
 			price : priceData[selectedRon as keyof typeof priceData] as number,
-			amountRM : inputRM,
 			amountLitre : inputLitre,
 			consumption : consumption
+
+			
 		}
-		updateData(draftData)
-		addData(draftData)
+		context.addLog(draftData)
 
 		const result = (data.length > 0) ? 
 			"Fueling record has been created. You has completed " + trip + "km journey with " + consumption.toFixed(2) + " km/L fuel consumption." : 
@@ -136,6 +146,7 @@ export const LogEntry: React.FC<LogEntryProps> = ({data, settingData, priceData,
 
 
 	useEffect(() => {
+		console.log("Berubah")
 		setSelectedRon(settingData.ron)
 		togglePreset(settingData.unit)
 		if (settingData.unit == "RM") {
@@ -161,6 +172,10 @@ export const LogEntry: React.FC<LogEntryProps> = ({data, settingData, priceData,
 
 
 	
+	function fetchPrice(): void {
+		throw new Error("Function not implemented.")
+	}
+
 	return (
 		<Card>
 			<CardHeader>
@@ -188,7 +203,7 @@ export const LogEntry: React.FC<LogEntryProps> = ({data, settingData, priceData,
 						value={selectedRon} 
 						onValueChange={(e) => {
 							setSelectedRon(e)
-							updateRon(e)
+							context.updateRon(e)
 						}}>	
 						<ToggleGroupItem value="RON95">RON95</ToggleGroupItem>
 						<ToggleGroupItem value="RON97">RON97</ToggleGroupItem>
@@ -202,7 +217,7 @@ export const LogEntry: React.FC<LogEntryProps> = ({data, settingData, priceData,
 						value={selectedPreset} 
 						onValueChange={(e) => {
 							togglePreset(e)
-							updateUnit(e)}}>
+							context.updateUnit(e)}}>
 						<ToggleGroupItem value="RM">RM</ToggleGroupItem>
 						<ToggleGroupItem value="L">Litre</ToggleGroupItem>
 					</ToggleGroup>
@@ -275,7 +290,7 @@ export const LogEntry: React.FC<LogEntryProps> = ({data, settingData, priceData,
 					</div>
 					
 					<div>
-						<Badge onClick={() => fetchPrice()}>Update</Badge></div>	
+						<Badge onClick={() => getPrice()}>Update</Badge></div>	
 					</div>	
 				<Button onClick={() => initAdd()} style={{textAlign:"center"}}>Log Entry</Button>
 			</div>

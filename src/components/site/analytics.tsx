@@ -10,22 +10,22 @@ import {
 } from "@/components/ui/carousel"
 import { LineChart, List, ListItem } from '@tremor/react';
 import { Data } from "@/lib/types";
+import { useData } from "@/data/context";
 
 
 
-interface AnalyticsProps {
-	data : Data[]
-}
 
 
+export const AnalyticsCard = () => {
 
-export const AnalyticsCard : React.FC<AnalyticsProps> = (input) => {
+	const context = useData();
+	const data = context.data.Log;
 
 	function getAverageFuelConsumption() {
 		
-		if (input.data.length > 1) {
-			const totalKm = input.data[input.data.length - 1].odometer - input.data[0].odometer
-			const totalLitre = input.data.slice(1).map((data) => data.amountLitre).reduce((a, b) => a + b, 0);
+		if (data.length > 1) {
+			const totalKm = data[data.length - 1].odometer - data[0].odometer
+			const totalLitre = data.slice(1).map((data) => data.amountLitre).reduce((a, b) => a + b, 0);
 			return (totalKm / totalLitre).toFixed(2)
 		
 		} else {
@@ -33,21 +33,21 @@ export const AnalyticsCard : React.FC<AnalyticsProps> = (input) => {
 		}
 	}
 
-	const chart_consumption = input.data.map((data) => ({ 
+	const chart_consumption = data.map((data) => ({ 
 		'Consumption (km/L)': data.consumption.toFixed(2),
 		'date': new Date(data.timestamp).toLocaleDateString('en-MY', { day: 'numeric', month: 'short' })
 	}))
 
 	const getTotalFuel = () => {
-		return input.data.slice(1).map((data) => data.amountLitre).reduce((a, b) => a + b, 0).toFixed(2)
+		return data.slice(1).map((data) => data.amountLitre).reduce((a, b) => a + b, 0).toFixed(2)
 	}
 
 	const getTotalCost = () => {
-		return input.data.slice(1).map((data) => data.amountRM).reduce((a, b) => a + b, 0).toFixed(2)
+		return data.slice(1).map((data) => (data.amountLitre * data.price)).reduce((a, b) => a + b, 0).toFixed(2)
 	}
 
 	const getDateRange = () => {
-		return `${new Date(input.data[0].timestamp).toLocaleDateString('en-MY')} - ${new Date(input.data[input.data.length-1].timestamp).toLocaleDateString('en-MY')}`
+		return `${new Date(data[0].timestamp).toLocaleDateString('en-MY')} - ${new Date(data[data.length-1].timestamp).toLocaleDateString('en-MY')}`
 	}
 
   return (
@@ -105,7 +105,7 @@ export const AnalyticsCard : React.FC<AnalyticsProps> = (input) => {
 				<List>
 					<ListItem>
 					<span>Total Journey Made</span>
-					<span>{input.data[input.data.length-1].odometer - input.data[0].odometer } km</span>
+					<span>{data[data.length-1].odometer - data[0].odometer } km</span>
 					</ListItem>
 					<ListItem>
 					<span>Total Fuel Consumed</span>

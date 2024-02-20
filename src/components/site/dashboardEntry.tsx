@@ -1,20 +1,20 @@
 
-import { deleteData } from "@/lib/localstorage";
-import { AnalyticsCard } from "../analytics";
+import { AnalyticsCard } from "./analytics";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { SetStateAction, useState } from "react";
 import { Data } from "@/lib/types";
+import { useData } from "@/data/context";
 
-interface DashboardProps {
-	data: Data[];
-	loadData: () => void;
 
-}
+const DashboardEntry = () => {
 
-const DashboardEntry: React.FC<DashboardProps> = ( {data, loadData }) => {
+	const context = useData();
+	const data = context.data.Log;
+	
+
 	const [currentPage, setCurrentPage] = useState(1);
 	const [recordsPerPage] = useState(5);
 	const reversedData = [...data].reverse();
@@ -35,7 +35,7 @@ const DashboardEntry: React.FC<DashboardProps> = ( {data, loadData }) => {
 
 		<CardContent className="space-y-2">
 
-			  { (data.length > 0) && <div><AnalyticsCard data={data} /></div> }
+			  { (data.length > 0) && <div><AnalyticsCard /></div> }
 
 		<Table className="w-[700px]">
 			<TableHeader>
@@ -49,15 +49,12 @@ const DashboardEntry: React.FC<DashboardProps> = ( {data, loadData }) => {
 	</TableHeader>
 <TableBody>
 {currentRecords.map((data, index) => (
-	  <TableRow key={index} onClick={(e) => {
-		  deleteData(data.timestamp)
-		  loadData();
-		  }}>
+	  <TableRow key={index} onClick={(e) => context.delLog(data.id)}>
 		  <TableCell className="flex flex-col justify-center items-center text-left"><div className=""><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleDateString("en-MY")}</Badge><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Badge></div></TableCell>
 		  <TableCell className="text-center">{<div><Badge variant="destructive">{( (data.trip != 0) ? data.consumption.toFixed(1) + " km/L" : "0 km/L")}</Badge></div>}<Badge variant="outline">{( (data.trip != 0) ? (data.trip + " km") : "0 km")}</Badge></TableCell>
 		  <TableCell className="items-center text-center"><Badge>{data.odometer}</Badge></TableCell>
 		  <TableCell className="items-center text-center">{<div><Badge style={data.ron === "RON95" ? {backgroundColor:'yellow', color:'black', borderColor:'black'} : {backgroundColor:'lightgreen', color:'black', borderColor:'black'}}>{data.ron}</Badge><Badge variant="outline" style={{border:'none'}}>RM {data.price}</Badge></div>}</TableCell>
-		  <TableCell className="text-right">{<div><Badge variant="outline">{data.amountLitre.toFixed(2)} L : RM {data.amountRM}</Badge></div>}</TableCell>
+		  <TableCell className="text-right">{<div><Badge variant="outline">{data.amountLitre.toFixed(2)} L : RM {((Math.ceil(data.price * data.amountLitre * 100) / 100).toFixed(2))}</Badge></div>}</TableCell>
 	  </TableRow>
 ))}
 </TableBody>
