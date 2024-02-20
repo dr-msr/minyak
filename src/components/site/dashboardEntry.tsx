@@ -23,6 +23,12 @@ const DashboardEntry = () => {
 	const currentRecords = reversedData.slice(indexOfFirstRecord, indexOfLastRecord);
 	const paginate = (pageNumber: SetStateAction<number>) => setCurrentPage(pageNumber);
 
+	function handleDelete(id: string) {
+		    if (window.confirm('Are you sure you want to delete this data?')) {
+            		context.delLog(id);
+        }
+	}
+
 	return (
 		<Card>
 		<CardHeader>
@@ -49,7 +55,7 @@ const DashboardEntry = () => {
 	</TableHeader>
 <TableBody>
 {currentRecords.map((data, index) => (
-	  <TableRow key={index} onClick={(e) => context.delLog(data.id)}>
+	  <TableRow key={index} onClick={(e) => handleDelete(data.id)}>
 		  <TableCell className="flex flex-col justify-center items-center text-left"><div className=""><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleDateString("en-MY")}</Badge><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Badge></div></TableCell>
 		  <TableCell className="text-center">{<div><Badge variant="destructive">{( (data.trip != 0) ? data.consumption.toFixed(1) + " km/L" : "0 km/L")}</Badge></div>}<Badge variant="outline">{( (data.trip != 0) ? (data.trip + " km") : "0 km")}</Badge></TableCell>
 		  <TableCell className="items-center text-center"><Badge>{data.odometer}</Badge></TableCell>
