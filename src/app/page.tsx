@@ -11,6 +11,7 @@ export default function Home() {
 
 	useEffect(() => {
 		context.initData();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

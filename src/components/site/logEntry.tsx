@@ -117,6 +117,7 @@ export const LogEntry = () => {
 			setAmount(settingData.preset[4]); setShowCustom(false); break;
 		case "5":
 			setShowCustom(true); break;
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}},[selectedValue])
 
 	useEffect(() => {
@@ -168,6 +169,7 @@ export const LogEntry = () => {
 				5 : "Other"
 			}
 		)}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[settingData])
 
 

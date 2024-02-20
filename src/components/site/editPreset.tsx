@@ -56,7 +56,7 @@ export const EditPreset  = () => {
 	<DialogHeader>
 	  <DialogTitle>Edit Preset</DialogTitle>
 	  <DialogDescription>
-		Make changes to your preset here. Click save when you're done.
+		Make changes to your preset here. Click save when you are done.
 	  </DialogDescription>
 	</DialogHeader>
 	<div className="grid gap-4 py-4">
