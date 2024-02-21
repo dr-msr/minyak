@@ -9,8 +9,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { LineChart, List, ListItem } from '@tremor/react';
-import { Data } from "@/lib/types";
 import { useData } from "@/data/context";
+import { Log } from "@/data/version";
 
 
 
@@ -19,7 +19,7 @@ import { useData } from "@/data/context";
 export const AnalyticsCard = () => {
 
 	const context = useData();
-	const data = context.data.Log;
+	const data : Log[] = context.data.Log;
 
 	function getAverageFuelConsumption() {
 		

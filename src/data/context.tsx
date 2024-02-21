@@ -15,7 +15,7 @@ interface DataHandler  {
 
 	data : DataType["latest"];
 
-	initData : () => void;
+	initData : () => boolean;
 
 	updatePrice: (price: PriceData) => void;
 	updateSetting: (setting: Setting ) => void;
@@ -49,18 +49,28 @@ export const DataProvider : React.FC<DataProviderProps> = ({ children }) => {
 	const initData = () => {
 		let payload = localStorage.getItem('data');
 		if (!payload) {
-			payload = JSON.stringify(defaultData);
+			payload = JSON.stringify(defaultData.latest);
 			console.log("Saved data : Empty")
 			console.log("Initializing default data with version : " + defaultData.latest.Version)
 			localStorage.setItem('data', payload);
+			setData(defaultData.latest);
+			return true
 		}
-		const tmpData = JSON.parse(payload)
-		if (validateData(tmpData)) {
-			setData(tmpData);
-		} else {
-			setData(tmpData);
-		}
-	}
+
+		try {
+			const tmpData = JSON.parse(payload)
+			if (validateData(tmpData)) {
+				setData(tmpData);
+				return true
+			} else {
+				return false;
+			}
+
+		} catch (error) {
+			return false
+
+	
+	}}
 
 	const updatePrice = (price: PriceData) => {
 		setData({...data, PriceData : [price, ...data.PriceData]});
@@ -80,8 +90,9 @@ export const DataProvider : React.FC<DataProviderProps> = ({ children }) => {
 	}
 
 	const delLog = (id: string) => {
-		setData({...data, Log : data.Log.filter((log: { id: string; }) => log.id !== id)});
-		localStorage.setItem('data', JSON.stringify(data));
+		const updatedData = {...data, Log : data.Log.filter((Log: { id: string; }) => Log.id !== id)};
+		setData(updatedData);
+		localStorage.setItem('data', JSON.stringify(updatedData));
 	}
 
 	const updateRon = (ron: string) => {
@@ -95,8 +106,14 @@ export const DataProvider : React.FC<DataProviderProps> = ({ children }) => {
 	}
 
 	const emptyData = () => {
-		localStorage.removeItem('data');
-		initData();
+		try {
+			localStorage.clear()
+			initData()
+
+		} 
+		catch (error) {
+			toast.error("Error clearing data")
+		}
 	}
 
 	const value = {

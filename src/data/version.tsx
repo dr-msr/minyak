@@ -4,12 +4,14 @@ export type DataType = {
 	latest : v002,
 	"0.0.1" : v001,
 	"0.0.2" : v002,
-} | any
+	any : any,
+}
 
 export const defaultData: DataType = {
 	latest: d002,
 	"0.0.1": d001,
 	'0.0.2': d002,
+	any: {}
 } 
 
 

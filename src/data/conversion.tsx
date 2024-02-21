@@ -1,6 +1,6 @@
 import { DataType } from "./version";
 
-export function convertData (input : DataType) {
+export function convertData (input : DataType["any"]) {
 	if (input.Version === "0.0.1") {
 		const draftData : DataType["latest"] = {
 			Version : "0.0.2",

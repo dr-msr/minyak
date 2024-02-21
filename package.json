@@ -27,6 +27,7 @@
     "@tremor/react": "^3.14.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "cmdk": "^0.2.1",
     "embla-carousel-react": "^8.0.0-rc22",
     "generate-unique-id": "^2.0.3",
     "lucide-react": "^0.331.0",

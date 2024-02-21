@@ -98,7 +98,7 @@ export const LogEntry = () => {
 		}
 		context.addLog(draftData)
 
-		const result = (data.length > 0) ? 
+		const result = (context.data.Log.length > 1) ? 
 			"Fueling record has been created. You has completed " + trip + "km journey with " + consumption.toFixed(2) + " km/L fuel consumption." : 
 			"Fueling record has been created."
 		toast.success(result)
