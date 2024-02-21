@@ -1,9 +1,7 @@
-import { toast } from 'sonner'
 import { DataType, defaultData } from './version'
-import { convertData } from './conversion'
-import { useData } from './context'
 
-export function validateData( input : DataType) {
+
+export function validateData( input : DataType["any"]) {
 	console.log("Saved data version : " + input.Version)
 	console.log("Latest data version : " + defaultData.latest.Version)
 
