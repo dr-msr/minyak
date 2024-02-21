@@ -19,7 +19,8 @@ export default function Home() {
 
 	useEffect(() => {
 		context.initData();
-		setIsLoading(false);	
+		setIsLoading(false);
+	// eslint-disable-next-line react-hooks/exhaustive-deps	
 	},[isData])
 
 	return (
