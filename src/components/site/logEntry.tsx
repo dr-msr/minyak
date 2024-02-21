@@ -79,7 +79,7 @@ export const LogEntry = () => {
 
 		const hariIni = new Date()
 		const id2 = generateUniqueId({
-			length: 6,
+			length: 8,
 			useLetters: true
 		  });
 
