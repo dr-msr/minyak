@@ -5,7 +5,6 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { SetStateAction, useState } from "react";
-import { Data } from "@/lib/types";
 import { useData } from "@/data/context";
 
 
