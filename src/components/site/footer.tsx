@@ -15,8 +15,6 @@ import {
 	MenubarSubTrigger,
 	MenubarTrigger,
   } from "@/components/ui/menubar"
-import { defaultSetting } from "@/lib/defaults";
-import { Setting } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { EditPreset } from "./editPreset";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
@@ -26,19 +24,9 @@ import { Label } from "../ui/label";
 import { AlertTriangle, Text } from "lucide-react";
 import { useData } from "@/data/context";
 
-interface FooterProps {
-	settingData : Setting
-	loadSetting : () => void
-}
-
-
 export const Footer = () => {
-
-
 	const context = useData();
 
-
-	
 	return (
 		<Dialog>
 
@@ -48,7 +36,7 @@ export const Footer = () => {
 		  <MenubarContent>
 		  <MenubarItem>Unit Preference</MenubarItem>
 		  <MenubarRadioGroup value={context.data.Setting.unit} 
-		  	onValueChange={(e) => context.updateUnit(e)}>
+		  	onValueChange={(e: string) => context.updateUnit(e)}>
 			  <MenubarRadioItem value="RM">RM</MenubarRadioItem>
 			  <MenubarRadioItem value="L">Litre</MenubarRadioItem>
 			</MenubarRadioGroup>
@@ -56,7 +44,7 @@ export const Footer = () => {
 
 			<MenubarItem>Petrol Preference</MenubarItem>
 		  <MenubarRadioGroup value={context.data.Setting.ron} 
-		  		  	onValueChange={(e) => context.updateRon(e)}>
+		  		  	onValueChange={(e: string) => context.updateRon(e)}>
 			  <MenubarRadioItem value="RON95">RON95</MenubarRadioItem>
 			  <MenubarRadioItem value="RON97">RON97</MenubarRadioItem>
 			</MenubarRadioGroup>

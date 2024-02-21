@@ -1,14 +1,19 @@
 'use client'
 
 import { ReactNode, createContext, useContext, useState } from "react";
-import { Data, Log, PriceData, Setting } from "@/data/version";
-import { defaultDataV001 } from "@/lib/defaults";
+import { DataType, Log, PriceData, Setting, defaultData } from "@/data/version";
+import { validateData } from './actions'
 import React from "react";
-import ShortUniqueId from "short-unique-id";
+import { toast } from "sonner";
+import { d002 } from "./defaults";
+import { Dialog } from "@radix-ui/react-dialog";
+import { DialogContent, DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
+import { AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface DataHandler  {
 
-	data : Data;
+	data : DataType["latest"];
 
 	initData : () => void;
 
@@ -39,15 +44,22 @@ type DataProviderProps = {
 
 export const DataProvider : React.FC<DataProviderProps> = ({ children }) => {
 
-	const [data, setData] = useState<Data>(defaultDataV001);
+	const [data, setData] = useState<DataType["latest"]>(d002);
 
 	const initData = () => {
 		let payload = localStorage.getItem('data');
 		if (!payload) {
-			payload = JSON.stringify(defaultDataV001);
+			payload = JSON.stringify(defaultData);
+			console.log("Saved data : Empty")
+			console.log("Initializing default data with version : " + defaultData.latest.Version)
 			localStorage.setItem('data', payload);
 		}
-		setData(JSON.parse(payload));
+		const tmpData = JSON.parse(payload)
+		if (validateData(tmpData)) {
+			setData(tmpData);
+		} else {
+			setData(tmpData);
+		}
 	}
 
 	const updatePrice = (price: PriceData) => {
@@ -68,7 +80,7 @@ export const DataProvider : React.FC<DataProviderProps> = ({ children }) => {
 	}
 
 	const delLog = (id: string) => {
-		setData({...data, Log : data.Log.filter((log) => log.id !== id)});
+		setData({...data, Log : data.Log.filter((log: { id: string; }) => log.id !== id)});
 		localStorage.setItem('data', JSON.stringify(data));
 	}
 

@@ -147,7 +147,6 @@ export const LogEntry = () => {
 
 
 	useEffect(() => {
-		console.log("Berubah")
 		setSelectedRon(settingData.ron)
 		togglePreset(settingData.unit)
 		if (settingData.unit == "RM") {
@@ -173,10 +172,6 @@ export const LogEntry = () => {
 	},[settingData])
 
 
-	
-	function fetchPrice(): void {
-		throw new Error("Function not implemented.")
-	}
 
 	return (
 		<Card>

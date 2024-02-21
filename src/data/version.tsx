@@ -1,14 +1,32 @@
+import { d001, d002 } from './defaults'
 
-export type version = [ 
-	"0.0.1"
-]
+export type DataType = {
+	latest : v002,
+	"0.0.1" : v001,
+	"0.0.2" : v002,
+} | any
 
-export type Data = {
-	Version : "0.0.1";
+export const defaultData: DataType = {
+	latest: d002,
+	"0.0.1": d001,
+	'0.0.2': d002,
+} 
+
+
+export type v001 = {
+	Version : string,
 	Setting : Setting,
 	Log : Log[],
 	PriceData : PriceData[],
-	Vehicle? : Vehicle ,
+}
+
+export type v002 = {
+	Version : string,
+	UpdatedAt : Date,
+	Setting : Setting,
+	Log : Log[],
+	PriceData : PriceData[],
+	Vehicle : Vehicle[],
 }
 
 export type Vehicle = {
@@ -18,7 +36,6 @@ export type Vehicle = {
 	color : string;
 	registration : string;
 }
-
 
 export type Setting = {
 	ron : string;
@@ -46,3 +63,5 @@ export type PriceData = {
 	RON95 : number;
 	RON97 : number;
 }
+
+
