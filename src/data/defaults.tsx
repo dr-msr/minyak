@@ -34,9 +34,9 @@ export const d001 : v001  = {
 		}},
 	Log : [],
 	PriceData : [{
-		date : "2024-01-01",
-		ron95 : 2.05,
-		ron97 : 3.47,
+		UpdatedAt : "2024-01-01",
+		RON95 : 2.05,
+		RON97 : 3.47,
 	}]
 }
 

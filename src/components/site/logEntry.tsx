@@ -153,10 +153,14 @@ export const LogEntry = () => {
 	useEffect(() => {
 		if (data.length > 0) {
 			setOdonto(data[data.length - 1].odometer)
-			initPrice()
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[data])
+
+	useEffect(() => {
+		initPrice()
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	},[])
 
 	useEffect(() => {
 		if (selectedPreset == "RM") {
