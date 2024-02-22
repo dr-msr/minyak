@@ -158,7 +158,9 @@ export const LogEntry = () => {
 	},[data])
 
 	useEffect(() => {
+		if (context.data.PriceData.length == 1) {
 		initPrice()
+		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[])
 
