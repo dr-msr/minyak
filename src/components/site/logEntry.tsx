@@ -155,6 +155,7 @@ export const LogEntry = () => {
 			setOdonto(data[data.length - 1].odometer)
 			initPrice()
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[data])
 
 	useEffect(() => {

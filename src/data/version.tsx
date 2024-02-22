@@ -49,7 +49,7 @@ export type Log = {
 	odometer : number;
 	trip : number;
 	ron : string;
-	price : number;
+	price : PriceData;
 	amount : {
 		unit : string;
 		value : number;

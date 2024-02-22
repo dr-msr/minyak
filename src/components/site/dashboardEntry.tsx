@@ -91,8 +91,6 @@ const DashboardEntry = () => {
 			outputRon = "RON 97"
 		}
 
-
-
 		return (
 			<div>
 				<Badge style={styleBadge}>{outputRon}</Badge>
