@@ -8,8 +8,9 @@ import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useData } from "@/data/context"
-import { getPrice } from "@/lib/localstorage"
+import { getPrice } from "@/lib/utils"
 import generateUniqueId from 'generate-unique-id'
+import { DataType, Log } from "@/data/version"
 
 
 
@@ -62,6 +63,22 @@ export const LogEntry = () => {
 			selectPreset("L")
 	}}
 
+	function getLastFuel(amount: {unit: string, value: number}, ron: string) {
+		if (amount.unit === "RM") {
+			if (ron == "RON95") {
+				return amount.value / priceData.ron95
+			} else {
+				return amount.value / priceData.ron97
+			}
+		} else {
+			if (ron == "RON95") {
+				return amount.value * priceData.ron95
+			} else {
+				return amount.value * priceData.ron97
+			}
+		}
+	}
+
 	function initAdd() {
 		if (inputOdonto == 0) { toast("Odometer cannot be empty."); return }
 		if (selectedValue == "") { toast("Please select an amount."); return }
@@ -74,7 +91,7 @@ export const LogEntry = () => {
 
 
 		var trip = (data.length > 0) ? inputOdonto - data[data.length - 1].odometer : 0
-		var consumption = (data.length > 0) ? trip / data[data.length - 1].amountLitre : 0
+		var consumption = (data.length > 0) ? trip / getLastFuel(data[data.length -1].amount, data[data.length -1].ron ) : 0
 
 
 		const hariIni = new Date()
@@ -83,15 +100,18 @@ export const LogEntry = () => {
 			useLetters: true
 		  });
 
-		const draftData = {
+		const draftData : Log = {
 
 			id : id2,
 			timestamp : hariIni,
 			odometer : inputOdonto,
 			trip : trip,
 			ron : selectedRon,
-			price : priceData[selectedRon as keyof typeof priceData] as number,
-			amountLitre : inputLitre,
+			price : priceData,
+			amount : {
+				unit : selectedPreset,
+				value : inputAmount
+			},
 			consumption : consumption
 
 			
@@ -103,6 +123,16 @@ export const LogEntry = () => {
 			"Fueling record has been created."
 		toast.success(result)
 		setSelectedValue("")
+	}
+
+	async function initPrice() {
+		const harga = await getPrice()
+		if (harga) {
+			context.updatePrice(harga)
+			toast.success("Price updated successfully : " + new Date(harga.date).toLocaleDateString("en-MY") + " (https://data.gov.my).")
+		} else {
+			toast.error("Failed to fetch the latest price. Current price is dated at " + new Date(priceData.date).toLocaleDateString("en-MY") + ".")
+		}
 	}
 
 	useEffect(() => {
@@ -123,6 +153,7 @@ export const LogEntry = () => {
 	useEffect(() => {
 		if (data.length > 0) {
 			setOdonto(data[data.length - 1].odometer)
+			initPrice()
 		}
 	},[data])
 
@@ -130,16 +161,16 @@ export const LogEntry = () => {
 		if (selectedPreset == "RM") {
 			setInputRM(inputAmount)
 			if (selectedRon == "RON95") {
-				setInputLitre(parseFloat((inputAmount / priceData.RON95).toFixed(2)))
+				setInputLitre(parseFloat((inputAmount / priceData.ron95).toFixed(2)))
 			} else if (selectedRon == "RON97") {
-				setInputLitre(parseFloat((inputAmount / priceData.RON97).toFixed(2)))
+				setInputLitre(parseFloat((inputAmount / priceData.ron97).toFixed(2)))
 			}
 		} else if (selectedPreset == "L") {
 			setInputLitre(inputAmount)
 			if (selectedRon == "RON95") {
-				setInputRM(parseFloat((inputAmount * priceData.RON95).toFixed(2)))
+				setInputRM(parseFloat((inputAmount * priceData.ron95).toFixed(2)))
 			} else if (selectedRon == "RON97") {
-				setInputRM(parseFloat((inputAmount * priceData.RON97).toFixed(2)))
+				setInputRM(parseFloat((inputAmount * priceData.ron97).toFixed(2)))
 			}
 		}
 
@@ -268,7 +299,7 @@ export const LogEntry = () => {
 							variant={"outline"} 
 							className="rounded-none" 
 							style={{borderColor:"black"}}>
-							{ priceData.RON95 != 0 ? "RM " + priceData.RON95 + "/L" : "Loading.." }
+							{ priceData.ron95 != 0 ? "RM " + priceData.ron95 + "/L" : "Loading.." }
 						</Badge>
 
 						<Badge 
@@ -281,13 +312,13 @@ export const LogEntry = () => {
 							variant={"outline"} 
 							className="rounded-l-none" 
 							style={{borderColor:"black"}}>
-							{ priceData.RON97 != 0 ? "RM " + priceData.RON97 + "/L" : "Loading.." }
+							{ priceData.ron97 != 0 ? "RM " + priceData.ron97 + "/L" : "Loading.." }
 						</Badge>
 					
 					</div>
 					
 					<div>
-						<Badge onClick={() => getPrice()}>Update</Badge></div>	
+						<Badge onClick={() => initPrice()}>Update</Badge></div>	
 					</div>	
 				<Button onClick={() => initAdd()} style={{textAlign:"center"}}>Log Entry</Button>
 			</div>

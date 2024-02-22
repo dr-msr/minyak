@@ -1,28 +1,22 @@
-import { d001, d002 } from './defaults'
+import { d001, d002, d003 } from './defaults'
 
 export type DataType = {
-	latest : v002,
+	latest : v003,
 	"0.0.1" : v001,
 	"0.0.2" : v002,
+	"0.0.3" : v003,
 	any : any,
 }
 
 export const defaultData: DataType = {
-	latest: d002,
+	latest: d003,
 	"0.0.1": d001,
 	'0.0.2': d002,
+	"0.0.3" : d003,
 	any: {}
 } 
 
-
-export type v001 = {
-	Version : string,
-	Setting : Setting,
-	Log : Log[],
-	PriceData : PriceData[],
-}
-
-export type v002 = {
+export type v003 = {
 	Version : string,
 	UpdatedAt : Date,
 	Setting : Setting,
@@ -56,14 +50,70 @@ export type Log = {
 	trip : number;
 	ron : string;
 	price : number;
-	amountLitre : number;
+	amount : {
+		unit : string;
+		value : number;
+	};
 	consumption : number;
 }
 
 export type PriceData = {
-	dateUpdated : string;
-	RON95 : number;
-	RON97 : number;
+	date : string;
+	ron95 : number;
+	ron97 : number;
 }
 
 
+export type v001 = {
+	Version : string,
+	Setting : {
+		ron : string;
+			unit : string;
+			preset : {
+				1 : number;
+				2 : number;
+				3 : number;
+				4 : number;
+			}},
+	Log : {
+		id : string;
+		timestamp : Date;
+		odometer : number;
+		trip : number;
+		ron : string;
+		price : number;
+		amountLitre : number;
+		consumption : number;
+		}[],
+	PriceData :  {
+		UpdatedAt : string;
+		RON95 : number;
+		RON97 : number;
+		}[],
+}
+
+export type v002 = {
+	Version : string,
+	UpdatedAt : Date,
+	Setting : {
+		ron : string;
+			unit : string;
+			preset : {
+				1 : number;
+				2 : number;
+				3 : number;
+				4 : number;
+			}},
+	Log : {
+		id : string;
+		timestamp : Date;
+		odometer : number;
+		trip : number;
+		ron : string;
+		price : number;
+		amountLitre : number;
+		consumption : number;
+	}[],
+	PriceData : PriceData[],
+	Vehicle : Vehicle[],
+}

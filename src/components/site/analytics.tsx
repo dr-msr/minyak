@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/carousel"
 import { LineChart, List, ListItem } from '@tremor/react';
 import { useData } from "@/data/context";
-import { Log } from "@/data/version";
+import { Log, PriceData } from "@/data/version";
+import { getPrice } from "@/lib/utils";
 
 
 
@@ -21,11 +22,45 @@ export const AnalyticsCard = () => {
 	const context = useData();
 	const data : Log[] = context.data.Log;
 
+	function getLitreUsage( amount: { unit: string; value: number; }, price : PriceData, ron : string) {
+		
+		var currentPrice
+		if (ron == 	"RON95") {
+			 currentPrice = price.ron95
+		} else {
+			 currentPrice = price.ron97
+		}
+			
+		if (amount.unit === "RM") {
+			return amount.value / currentPrice
+		} else {
+			return amount.value
+		}
+
+	}
+
+	function getPriceUsage( amount: { unit: string; value: number; }, price : PriceData, ron : string) {
+		
+		var currentPrice
+		if (ron == 	"RON95") {
+			 currentPrice = price.ron95
+		} else {
+			 currentPrice = price.ron97
+		}
+			
+		if (amount.unit === "RM") {
+			return amount.value
+		} else {
+			return amount.value * currentPrice
+		}
+
+	}
+
 	function getAverageFuelConsumption() {
 		
 		if (data.length > 1) {
 			const totalKm = data[data.length - 1].odometer - data[0].odometer
-			const totalLitre = data.slice(1).map((data) => data.amountLitre).reduce((a, b) => a + b, 0);
+			const totalLitre = data.slice(1).map((data) => getLitreUsage(data.amount, data.price, data.ron)).reduce((a, b) => a + b, 0);
 			return (totalKm / totalLitre).toFixed(2)
 		
 		} else {
@@ -39,11 +74,19 @@ export const AnalyticsCard = () => {
 	}))
 
 	const getTotalFuel = () => {
-		return data.slice(1).map((data) => data.amountLitre).reduce((a, b) => a + b, 0).toFixed(2)
+		var totalFuel = 0
+		for (var i = 0; i < data.length; i++) {
+			totalFuel += getLitreUsage(data[i].amount, data[i].price, data[i].ron)
+		}
+		return totalFuel.toFixed(2)
 	}
 
 	const getTotalCost = () => {
-		return data.slice(1).map((data) => (data.amountLitre * data.price)).reduce((a, b) => a + b, 0).toFixed(2)
+		var totalCost = 0
+		for (var i = 0; i < data.length; i++) {
+			totalCost += getPriceUsage(data[i].amount, data[i].price, data[i].ron)
+		}
+		return totalCost.toFixed(2)
 	}
 
 	const getDateRange = () => {

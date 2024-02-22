@@ -5,7 +5,6 @@ import { DataType, Log, PriceData, Setting, defaultData } from "@/data/version";
 import { validateData } from './actions'
 import React from "react";
 import { toast } from "sonner";
-import { d002 } from "./defaults";
 import { Dialog } from "@radix-ui/react-dialog";
 import { DialogContent, DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import { AlertTriangle } from "lucide-react";
@@ -44,7 +43,7 @@ type DataProviderProps = {
 
 export const DataProvider : React.FC<DataProviderProps> = ({ children }) => {
 
-	const [data, setData] = useState<DataType["latest"]>(d002);
+	const [data, setData] = useState<DataType["latest"]>(defaultData.latest);
 
 	const initData = () => {
 		let payload = localStorage.getItem('data');
@@ -73,8 +72,10 @@ export const DataProvider : React.FC<DataProviderProps> = ({ children }) => {
 	}}
 
 	const updatePrice = (price: PriceData) => {
-		setData({...data, PriceData : [price, ...data.PriceData]});
-		localStorage.setItem('data', JSON.stringify(data));
+		const newPriceData = [price, ...data.PriceData].slice(0, 5);
+		const newData = {...data, PriceData: newPriceData};
+		setData(newData);
+		localStorage.setItem('data', JSON.stringify(newData));
 	}
 
 	const updateSetting = (setting: Setting) => {
