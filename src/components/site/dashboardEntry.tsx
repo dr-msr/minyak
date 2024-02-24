@@ -119,9 +119,9 @@ const DashboardEntry = () => {
 	  <TableRow>
 		<TableHead>Date & Time</TableHead>
 		<TableHead className="w-[180px] text-center">Consumption (Trip) </TableHead>
+		<TableHead className="w-[180px] text-center">Amount & Cost </TableHead>
 		<TableHead>Odometer</TableHead>
 		<TableHead className="w-[150px] text-center">RON & Price</TableHead>
-		<TableHead className="w-[180px] text-right">Amount & Cost </TableHead>
 	  </TableRow>
 	</TableHeader>
 <TableBody>
@@ -129,9 +129,9 @@ const DashboardEntry = () => {
 	  <TableRow key={index} onClick={(e) => handleDelete(data.id)}>
 		  <TableCell className="flex flex-col justify-center items-center text-center"><div className=""><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleDateString("en-MY")}</Badge><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Badge></div></TableCell>
 		  <TableCell className="text-center">{<div><Badge variant="destructive">{( (data.trip != 0) ? data.consumption.toFixed(1) + " km/L" : "0 km/L")}</Badge></div>}<Badge variant="outline">{( (data.trip != 0) ? (data.trip + " km") : "0 km")}</Badge></TableCell>
+		  <TableCell className="text-right">{getFuelingTemplate(data.amount, data.price, data.ron)}</TableCell>
 		  <TableCell className="items-center text-center"><Badge>{data.odometer}</Badge></TableCell>
 		  <TableCell className="items-center text-center">{getRonTemplate(data.ron, data.price)}</TableCell>
-		  <TableCell className="text-right">{getFuelingTemplate(data.amount, data.price, data.ron)}</TableCell>
 	  </TableRow>
 ))}
 </TableBody>
