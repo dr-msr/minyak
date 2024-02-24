@@ -26,6 +26,7 @@ export const RestoreFile : React.FC<RestoreFileProps> = ({close}) => {
 	
 		</div>
 		<DialogFooter>
+			
 			<DialogClose asChild>
 				<Button type="submit">Cancel</Button>
 			</DialogClose>
