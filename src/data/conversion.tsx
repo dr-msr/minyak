@@ -3,7 +3,7 @@ import { DataType, Log, defaultData, v002, v003 } from "./version";
 export function convertData (input : DataType["any"]) {
 
 	if (input.Version == defaultData.latest.Version) {
-		return input
+		return input as DataType["latest"]
 	}
 
 	try {

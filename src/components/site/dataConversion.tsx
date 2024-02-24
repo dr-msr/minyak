@@ -1,4 +1,4 @@
-import { BellIcon, CheckIcon } from "@radix-ui/react-icons"
+import { BellIcon, CheckIcon, DownloadIcon, UploadIcon } from "@radix-ui/react-icons"
 import {
 	CalendarIcon,
 	EnvelopeClosedIcon,
@@ -36,6 +36,10 @@ import { DataType, defaultData } from "@/data/version"
 import { convertData } from "@/data/conversion"
 import { useData } from "@/data/context"
 import { toast } from "sonner"
+import { backupData, restoreFile } from "@/data/actions"
+import { Label } from "../ui/label"
+import { Input } from "../ui/input"
+import { AlertRestore } from "./alertRestore"
 
 interface DataConversionProps {
 	success: (value: boolean) => void;
@@ -47,7 +51,9 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
 		Version : "Not Available"
 	})
 	const [convertedData, setConvertedData] = useState<DataType["latest"] | null>(null)
+	const [parsedFile, setParsedFile] = useState<DataType["latest"] | null>(null)
 	const context = useData();
+	const [successLoad, setSuccessLoad] = useState(false);
 	
 
 
@@ -62,7 +68,6 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
 	useEffect(() => {
 		getData().then((data) => {
 			setLoadData(data);
-			console.log(data)
 		})
 		}
 	, [])
@@ -90,6 +95,29 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
 		}
 	}
 
+	async function initBackup() {
+
+		let payload = localStorage.getItem('data');
+		if (!payload) {
+			toast.error("No data found in local storage.");
+			return
+		};
+
+		const result = backupData(payload);
+		if (result.status == "SUCCESS") {
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
+
+
+
+
+
+		
+
   return (
     <Card className="w-[400px]">
       <CardHeader>
@@ -107,24 +135,44 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
         </div>
 
 		<div className=" flex items-center space-x-4 rounded-md border p-4">
-          <div className="flex-1 space-y-1">
-		  <div className="text-sm text-muted-foreground flex flex-col gap-2 mb-2">
+        	<div className="flex-1 space-y-1">
+		  		<div className="text-sm text-muted-foreground flex flex-col gap-2 mb-2 text-justify">
 
-			<div className="flex flex-row justify-between">
-				<p>Local Version : </p><Badge>{loadData.Version ? loadData.Version : "Not Available"}</Badge>
-			</div>
+					<div className="flex flex-row justify-between">
+						<p>Local Version : </p><Badge>{loadData.Version ? loadData.Version : "Not Available"}</Badge>
+					</div>
 
-			<div className="flex flex-row justify-between">
-				<p>Current Version : </p><Badge>{defaultData.latest.Version}</Badge>
-			</div>
+					<div className="flex flex-row justify-between">
+						<p>Current Version : </p><Badge>{defaultData.latest.Version}</Badge>
+					</div>
 
-			<div className="flex flex-row justify-between">
-				<p>Conversion Tool : </p> { convertedData ? (<Badge className="bg-green-700">Available</Badge>) : ( <Badge className="bg-red-700">Not Available</Badge>) }
-			</div>
+					<div className="flex flex-row justify-between">
+						<p>Conversion Tool : </p> { convertedData ? (<Badge className="bg-green-700">Available</Badge>) : ( <Badge className="bg-red-700">Not Available</Badge>) }
+					</div>
+
+					<div className="mt-2">
+
+					{ !loadData.Version ? (
+						<div>
+						<div>Unable to detect the data structure.</div>
+						<div className="mt-1.5">Please choose "Restore" to load data from existing savefile or "Initiate Fresh Data" to begin with empty database.</div>
+					</div>) : convertedData ? (
+						<div>
+							<p>A conversion tool is available.</p>
+							<p>Please make a backup of your data before proceeding.</p>
+						</div>
+						) : (
+						<div>
+							<div>A conversion tool is not available.</div>
+							<div className="mt-1.5">Please choose "Restore" to load data from existing savefile or "Initiate Fresh Data" to begin with empty database.</div>
+						</div>) 
+						}
+
+					</div>
+
 			
-			</div>
+		</div>
 
-			{ convertedData ? (<p className="text-sm text-muted-foreground">A conversion tool is available. Please make a backup of your data before proceeding.</p>) : (<p className="text-sm text-muted-foreground">A conversion tool is not available. We will reinitiate with a fresh data.</p>) }
           </div>
         </div>
 
@@ -133,16 +181,19 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
 
 
        
-	    <Command className="rounded-lg border shadow-md">
+	<Command className="rounded-lg border shadow-md">
       <CommandList>
-        <CommandGroup heading="Suggestions">
-          <CommandItem>
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            <span>Backup Data</span>
-          </CommandItem>
+        <CommandGroup heading= { loadData.Version ? "Data Savefile" : "Restore" }>
+          { loadData.Version && <CommandItem onSelect={() => initBackup()}>
+            <DownloadIcon className="mr-2 h-4 w-4" />
+            <span>Backup</span>
+          </CommandItem> }
+			<CommandItem>
+      		<AlertRestore success={setSuccessLoad} />      
+			</CommandItem>
         </CommandGroup>
         <CommandSeparator />
-        <CommandGroup heading="Export Data">
+        { loadData.Version && <CommandGroup heading="Export Data">
           <CommandItem>
             <PersonIcon className="mr-2 h-4 w-4" />
             <span>CSV</span>
@@ -155,7 +206,7 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
             <GearIcon className="mr-2 h-4 w-4" />
             <span>HTML</span>
           </CommandItem>
-        </CommandGroup>
+        </CommandGroup> }
       </CommandList>
     </Command>
 
@@ -163,7 +214,7 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
       </CardContent>
       <CardFooter>
         <Button className="w-full" onClick={() => initConversion()}>
-          <CheckIcon className="mr-2 h-4 w-4" /> { convertedData ? ("Begin Conversion") : ("Load New Data") }
+          <CheckIcon className="mr-2 h-4 w-4" /> { convertedData ? ("Begin Conversion") : ("Initiate Fresh Data") }
         </Button>
       </CardFooter>
     </Card>

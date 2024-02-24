@@ -23,14 +23,36 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { AlertTriangle, Text } from "lucide-react";
 import { useData } from "@/data/context";
+import { toast } from "sonner";
+import { backupData } from "@/data/actions";
+import { AlertRestore } from "./alertRestore";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import { RestoreFile } from "./restoreFile";
 
 export const Footer = () => {
 	const context = useData();
+	const [closeRestore, setCloseRestore] = useState(false);
+	const [menuValue, setMenuValue]	= useState("");
+
+	async function initBackup() {
+		let payload = localStorage.getItem('data');
+		if (!payload) {
+			toast.error("No data found in local storage.");
+			return
+		};
+
+		const result = backupData(payload);
+		if (result.status == "SUCCESS") {
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
 
 	return (
-		<Dialog>
 
-		<Menubar className="min-w-[400px] justify-center mt-2">
+
+		<Menubar className="min-w-[400px] justify-center mt-2" value={menuValue} onValueChange={(value) => setMenuValue(value)}>
 		<MenubarMenu>
 		  <MenubarTrigger>Setting</MenubarTrigger>
 		  <MenubarContent>
@@ -49,22 +71,42 @@ export const Footer = () => {
 			  <MenubarRadioItem value="RON97">RON97</MenubarRadioItem>
 			</MenubarRadioGroup>
 			<MenubarSeparator />
-      <DialogTrigger asChild>
-	  		<MenubarItem>
-			  	Edit Preset
-			</MenubarItem>
-      </DialogTrigger>
+
+			<Dialog>
+      			<DialogTrigger asChild>
+	  				<MenubarItem onSelect={(e) => e.preventDefault()}>
+			  			Edit Preset
+					</MenubarItem>
+      			</DialogTrigger>
+				  <EditPreset />
+	  		</Dialog>
+
 		  </MenubarContent>
 		</MenubarMenu>
 		<MenubarMenu>
 		  <MenubarTrigger>Data</MenubarTrigger>
 		  <MenubarContent>
-			<MenubarItem>
-			  Backup <MenubarShortcut>⌘Z</MenubarShortcut>
+			<MenubarItem onClick={() => initBackup()}>
+			  Backup 
 			</MenubarItem>
-			<MenubarItem>
-			  Restore <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-			</MenubarItem>
+			<Dialog open={closeRestore} onOpenChange={setCloseRestore}>
+      			<DialogTrigger asChild>
+	  				<MenubarItem onSelect={(e) => e.preventDefault()}>
+			  			Restore
+					</MenubarItem>
+      			</DialogTrigger>
+				  <RestoreFile close={(value) => {
+						setCloseRestore(!value)
+						if (value) { setMenuValue("") }
+				  }
+					} />
+	  		</Dialog>
+
+	
+			
+
+
+
 			<MenubarSeparator />
 			<MenubarSub>
 			  <MenubarSubTrigger>Export</MenubarSubTrigger>
@@ -111,8 +153,7 @@ export const Footer = () => {
 		</MenubarMenu>
 	  </Menubar>
 
-	  <EditPreset />
-	  </Dialog>
+
 
 	);
 }
