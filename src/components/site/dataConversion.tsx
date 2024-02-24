@@ -155,7 +155,7 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
 					{ !loadData.Version ? (
 						<div>
 						<div>Unable to detect the data structure.</div>
-						<div className="mt-1.5">Please choose "Restore" to load data from existing savefile or "Initiate Fresh Data" to begin with empty database.</div>
+						<div className="mt-1.5">Please choose {"["}Restore{"]"} to load data from existing savefile or {"["}Initiate Fresh Data{"]"} to begin with empty database.</div>
 					</div>) : convertedData ? (
 						<div>
 							<p>A conversion tool is available.</p>
@@ -164,7 +164,7 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
 						) : (
 						<div>
 							<div>A conversion tool is not available.</div>
-							<div className="mt-1.5">Please choose "Restore" to load data from existing savefile or "Initiate Fresh Data" to begin with empty database.</div>
+							<div className="mt-1.5">Please choose {"["}Restore{"]"} to load data from existing savefile or {"["}Initiate Fresh Data{"]"} to begin with empty database.</div>
 						</div>) 
 						}
 

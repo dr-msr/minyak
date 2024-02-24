@@ -104,9 +104,9 @@ export const AlertRestore : React.FC<AlertRestoreProps> = ( {success}) => {
 							<p><code>Updated at : {new Date(parsedData.UpdatedAt).toLocaleDateString("en-MY")}</code></p>
 							<p><code>==========</code></p>
 							<p><code>Importing...</code></p>
-							{parsedData.Log.map((log) => {
+							{parsedData.Log.map((log, index) => {
     							return (
-        						<p className="ml-2"><code>  {new Date(parsedData.UpdatedAt).toLocaleDateString("en-MY")} : {log.odometer} km</code></p>
+        						<p key={index}className="ml-2"><code>  {new Date(parsedData.UpdatedAt).toLocaleDateString("en-MY")} : {log.odometer} km</code></p>
     						)})}
 							<p><code>{">> "} Total {parsedData.Log.length} rows loaded.</code></p>
 							<p><code>==========</code></p>
