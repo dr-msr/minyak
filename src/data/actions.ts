@@ -28,6 +28,8 @@ export function backupData( payload : string) {
 		const now = new Date();
 		const today = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
 		const file = 'Minyak-Today-Backup-' + tmpData.Version + '-' + today ;
+		tmpData.UpdatedAt = now
+
 		// let output = fs.readFileSync(file);
 
 		
