@@ -1,5 +1,6 @@
-import Lottie from 'react-lottie';
 import animationData from './../../../public/car.json'
+import Lottie from "react-lottie";
+
 
 const CarAnimation =  () => {
 	return ( 
