@@ -153,6 +153,8 @@ export const LogEntry = () => {
 	useEffect(() => {
 		if (data.length > 0) {
 			setOdonto(data[data.length - 1].odometer)
+		} else {
+			setOdonto(0)
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[data])
@@ -161,6 +163,13 @@ export const LogEntry = () => {
 		if (context.data.PriceData.length == 1) {
 		initPrice()
 		}
+
+		if (data.length > 0) {
+			setOdonto(data[data.length - 1].odometer)
+		} else {
+			setOdonto(0)
+		}
+		
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[])
 

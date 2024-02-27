@@ -109,7 +109,8 @@ export const DataProvider : React.FC<DataProviderProps> = ({ children }) => {
 	const emptyData = () => {
 		try {
 			localStorage.clear()
-			initData()
+			data.Log = [];
+			setData(defaultData.latest);
 
 		} 
 		catch (error) {
