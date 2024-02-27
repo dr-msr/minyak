@@ -60,11 +60,10 @@ const DashboardEntry = () => {
 
 
 
-		return (
-			<div className="flex flex-col items-center justify-center">
-				<Badge variant="outline"> RM {outputRM}</Badge>
-				<Badge variant="outline" style={{border:'none'}}> {outputL} L</Badge>
-			</div>	
+		return ( {
+			outputRM : outputRM,
+			outputL : outputL
+		}
 		)
 	}
 	
@@ -94,7 +93,7 @@ const DashboardEntry = () => {
 		return (
 			<div>
 				<Badge style={styleBadge}>{outputRon}</Badge>
-				<Badge variant="outline" style={{border:'none'}}>RM {outputRM}</Badge></div>
+				<Badge variant="outline" style={{border:'none'}}>RM{outputRM}</Badge></div>
 		)
 
 	}
@@ -117,21 +116,26 @@ const DashboardEntry = () => {
 		<Table className="w-[700px]">
 			<TableHeader>
 	  <TableRow>
-		<TableHead>Date & Time</TableHead>
-		<TableHead className="w-[180px] text-center">Consumption (Trip) </TableHead>
-		<TableHead className="w-[180px] text-center">Amount & Cost </TableHead>
-		<TableHead>Odometer</TableHead>
-		<TableHead className="w-[150px] text-center">RON & Price</TableHead>
+		<TableHead className="p-0 pl-2">Date & Time</TableHead>
+		<TableHead className="p-0">Consumption</TableHead>
+		<TableHead className="p-0">Fueling </TableHead>
+		<TableHead className="p-0">Odometer</TableHead>
+		<TableHead className="p-0">Fuel Price</TableHead>
 	  </TableRow>
 	</TableHeader>
-<TableBody>
+<TableBody >
 {currentRecords.map((data, index) => (
 	  <TableRow key={index} onClick={(e) => handleDelete(data.id)}>
-		  <TableCell className="flex flex-col justify-center items-center text-center"><div className=""><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleDateString("en-MY")}</Badge><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Badge></div></TableCell>
-		  <TableCell className="text-center">{<div><Badge variant="destructive">{( (data.trip != 0) ? data.consumption.toFixed(1) + " km/L" : "0 km/L")}</Badge></div>}<Badge variant="outline">{( (data.trip != 0) ? (data.trip + " km") : "0 km")}</Badge></TableCell>
-		  <TableCell className="text-right">{getFuelingTemplate(data.amount, data.price, data.ron)}</TableCell>
-		  <TableCell className="items-center text-center"><Badge>{data.odometer}</Badge></TableCell>
-		  <TableCell className="items-center text-center">{getRonTemplate(data.ron, data.price)}</TableCell>
+		  <TableCell className="p-0 py-2 px-0"><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleDateString("en-MY")}</Badge><br></br><Badge variant="outline" className="border-none">{new Date(data.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</Badge></TableCell>
+		  <TableCell className="p-0"><Badge variant="destructive">{( (data.trip != 0) ? data.consumption.toFixed(1) + " km/L" : "0 km/L")}</Badge><br></br><Badge variant="outline">{( (data.trip != 0) ? (data.trip + "km : " + (data.trip / data.consumption).toFixed(2) + "L" ) : "0 km")}</Badge></TableCell>
+		  <TableCell className="p-0">
+			<Badge variant="outline"> RM {getFuelingTemplate(data.amount, data.price, data.ron).outputRM}</Badge><br></br>
+			<Badge variant="outline" style={{border:'none'}}> {getFuelingTemplate(data.amount, data.price, data.ron).outputL} L</Badge>
+
+		  
+		  </TableCell>
+		  <TableCell className="p-0"><Badge>{data.odometer}</Badge></TableCell>
+		  <TableCell className="p-0">{getRonTemplate(data.ron, data.price)}</TableCell>
 	  </TableRow>
 ))}
 </TableBody>

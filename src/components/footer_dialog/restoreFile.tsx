@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "../ui/button"
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
-import { AlertRestore } from "./alertRestore"
+import { AlertRestore } from "../site/alertRestore"
 
 interface RestoreFileProps {
 	close : (value: boolean) => void;

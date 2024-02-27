@@ -2,36 +2,33 @@
 
 import {
 	Menubar,
-	MenubarCheckboxItem,
 	MenubarContent,
 	MenubarItem,
 	MenubarMenu,
 	MenubarRadioGroup,
 	MenubarRadioItem,
 	MenubarSeparator,
-	MenubarShortcut,
 	MenubarSub,
 	MenubarSubContent,
 	MenubarSubTrigger,
 	MenubarTrigger,
-  } from "@/components/ui/menubar"
+} from "@/components/ui/menubar";
+
 import { useEffect, useState } from "react";
-import { EditPreset } from "./editPreset";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { AlertTriangle, Text } from "lucide-react";
 import { useData } from "@/data/context";
-import { toast } from "sonner";
 import { backupData } from "@/data/actions";
-import { AlertRestore } from "./alertRestore";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
-import { RestoreFile } from "./restoreFile";
+import { AlertTriangle } from "lucide-react";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import { RestoreFile } from "../footer_dialog/restoreFile";
+import { EditPreset } from "../footer_dialog/editPreset";
+import { toast } from "sonner";
+import { ResetData } from "../footer_dialog/resetData";
+
 
 export const Footer = () => {
 	const context = useData();
 	const [closeRestore, setCloseRestore] = useState(false);
+	const [closeReset, setCloseReset] = useState(false);
 	const [menuValue, setMenuValue]	= useState("");
 
 	async function initBackup() {
@@ -48,6 +45,13 @@ export const Footer = () => {
 			toast.error(result.message);
 		}
 	}
+
+	useEffect(() => {
+		if (closeReset) {
+			context.initData();
+		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	},[closeReset])
 
 	return (
 
@@ -89,6 +93,7 @@ export const Footer = () => {
 			<MenubarItem onClick={() => initBackup()}>
 			  Backup 
 			</MenubarItem>
+
 			<Dialog open={closeRestore} onOpenChange={setCloseRestore}>
       			<DialogTrigger asChild>
 	  				<MenubarItem onSelect={(e) => e.preventDefault()}>
@@ -102,10 +107,6 @@ export const Footer = () => {
 					} />
 	  		</Dialog>
 
-	
-			
-
-
 
 			<MenubarSeparator />
 			<MenubarSub>
@@ -118,7 +119,23 @@ export const Footer = () => {
 			</MenubarSub>
 			<MenubarSeparator />
 
-			<MenubarItem className="text-red"><AlertTriangle className="mr-2 stroke-red-900" /> Reset</MenubarItem>
+			<Dialog open={closeReset} onOpenChange={setCloseReset}>
+      			<DialogTrigger asChild>
+	  				<MenubarItem onSelect={(e) => e.preventDefault()} className="text-red">
+					  <AlertTriangle className="mr-2 stroke-red-900" /> Reset
+					</MenubarItem>
+      			</DialogTrigger>
+				  <ResetData success={(value) => {
+						setCloseReset(!value)
+						if (value) { 
+							setMenuValue("");		
+						}
+				  }
+					} />
+	  		</Dialog>
+
+
+
 		  </MenubarContent>
 		</MenubarMenu>
 		<MenubarMenu>

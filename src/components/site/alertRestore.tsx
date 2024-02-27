@@ -39,7 +39,6 @@ export const AlertRestore : React.FC<AlertRestoreProps> = ( {success}) => {
 		setFilename(input.target.files?.[0].name)
 		restoreFile(input)
 		.then((data) => {
-			console.log(data)
 
 			if (data.Version == undefined) {
 				toast.error("Unable to find data version. Savefile data is not valid.");

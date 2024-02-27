@@ -7,7 +7,6 @@ export function validateData( input : DataType["any"]) {
 	console.log("Latest data version : " + defaultData.latest.Version)
 
 	if (input.Version == defaultData.latest.Version) {
-		console.log("true")
 		return true
 	} else {
 		return false
