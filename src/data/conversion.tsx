@@ -3,12 +3,14 @@ import { DataType, Log, defaultData, v002, v003 } from "./version";
 export function convertData (input : DataType["any"]) {
 
 	if (input.Version == defaultData.latest.Version) {
+		console.log("%cCONVERT ", "color: green;", "Reached the latest version. Exiting conversion..")
 		return input as DataType["latest"]
 	}
 
 	try {
 		switch (input.Version) {
 			case "0.0.1" : {
+				console.log("%cCONVERT ", "color: green;", "Init convert 0.0.1 > 0.0.2")
 				const draftData : DataType["0.0.2"] = {
 					Version : "0.0.2",
 					UpdatedAt : new Date(),
@@ -17,13 +19,17 @@ export function convertData (input : DataType["any"]) {
 					PriceData : input.PriceData,
 					Vehicle : []
 				}
+				console.log("%cCONVERT ", "color: green;", ">> Converted to 0.02")
 				return convertData(draftData)
 			}
 			case "0.0.2" : {
+
+				console.log("%cCONVERT ", "color: green;", "Init convert 0.0.2 > 0.0.3")
 	
 				const inputData : v002 = input
+
 	
-				const draftLog : { 
+				let draftLog : { 
 					id : string;
 					timestamp : Date;
 					odometer : number;
@@ -40,8 +46,11 @@ export function convertData (input : DataType["any"]) {
 					};
 					consumption : number;
 				}[] = []
+
+
 	
 				inputData.Log.forEach((log) => {
+
 	
 					var draftRon95 : number = 0
 					var draftRon97 : number = 0
@@ -51,6 +60,9 @@ export function convertData (input : DataType["any"]) {
 					} else {
 						draftRon97 = log.price
 					}
+
+					const date = new Date(log.timestamp); // Convert timestamp to Date object
+
 	
 					const draftLogEntry : Log = {
 						id : log.id,
@@ -59,7 +71,7 @@ export function convertData (input : DataType["any"]) {
 						trip : log.trip,
 						ron : log.ron,
 						price : {
-							date : log.timestamp.toLocaleDateString("en-MY"),
+							date : date.toLocaleDateString("en-MY"),
 							ron95 : draftRon95,
 							ron97 : draftRon97
 						},
@@ -71,6 +83,8 @@ export function convertData (input : DataType["any"]) {
 					}
 					draftLog.push(draftLogEntry)
 				})
+
+
 	
 				const draftData : DataType["0.0.3"] = {
 					Version : "0.0.3",
@@ -80,7 +94,7 @@ export function convertData (input : DataType["any"]) {
 					PriceData : input.PriceData,
 					Vehicle : []
 				}
-	
+				console.log("%cCONVERT ", "color: green;", ">> Converted to 0.03")
 				return convertData(draftData)
 			}
 			default : {

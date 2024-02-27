@@ -3,12 +3,13 @@ import  exportFromJSON  from 'export-from-json'
 
 
 export function validateData( input : DataType["any"]) {
-	console.log("Saved data version : " + input.Version)
-	console.log("Latest data version : " + defaultData.latest.Version)
+	console.log("%cDATA", "color: #007acc;", "Local : " + input.Version,"Latest : " + defaultData.latest.Version)
 
 	if (input.Version == defaultData.latest.Version) {
+		console.log("%cDATA", "color: #007acc;","Data is up to date")
 		return true
 	} else {
+		console.log("%cCONVERT ", "color: green;", "Initiating data conversion")
 		return false
 	}
 }

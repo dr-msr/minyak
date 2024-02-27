@@ -4,15 +4,27 @@ import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { useData } from "@/data/context";
-import { PriceData } from "@/data/version";
+import { Log, PriceData } from "@/data/version";
+import { DateRange } from "react-day-picker";
+import { addDays, format } from "date-fns";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { Calendar } from "../ui/calendar";
 
 
 const DashboardEntry = () => {
 
 	const context = useData();
-	const data = context.data.Log;
+	const rawdata = context.data.Log;
+	const [data, setData] = useState(rawdata);
+
+
+	const [date, setDate] = useState<DateRange | undefined>({
+		from: rawdata[0]?.timestamp, 
+		to: rawdata[rawdata.length - 1]?.timestamp,
+	  })
 	
 
 	const [currentPage, setCurrentPage] = useState(1);
@@ -27,6 +39,109 @@ const DashboardEntry = () => {
 		    if (window.confirm('Are you sure you want to delete this data?')) {
             		context.delLog(id);
         }
+	}
+
+	function handleRange(target : string) {
+		const today = new Date();
+		switch (target) {
+			case "1w" : {
+				setDate({
+					from: addDays(today, -7), 
+					to: today,
+				  })
+				  break;
+			}
+			case "1m" : {
+				setDate({
+					from: addDays(today, -30), 
+					to: today,
+				  })
+				  break;
+
+			}
+			case "3m" : {
+				setDate({
+					from: addDays(today, -90), 
+					to: today,
+				  })
+				  break;
+
+			}
+			case "6m" : {
+				setDate({
+					from: addDays(today, -180), 
+					to: today,
+				  })
+				  break;
+
+			}
+			case "1y" : {
+				setDate({
+					from: addDays(today, -365), 
+					to: today,
+				  })
+				  break;
+
+			}
+			case "ALL" : {
+				setDate({
+					from: rawdata[0]?.timestamp, 
+					to: today,
+				  })
+				  break;
+
+			}
+		}
+	}
+
+	const DatePick = () => {
+		return (
+		<div className="flex flex-col items-center justify-center">
+			<div className="flex justify-center">
+			<Popover>
+				<PopoverTrigger asChild>
+				<Button
+					id="date"
+					variant={"outline"}
+					className={"w-[300px] justify-center text-left font-normal"}
+				>
+					<CalendarIcon className="mr-2 h-4 w-4" />
+					{date?.from ? (
+					date.to ? (
+						<>
+						{format(date.from, "LLL dd, y")} -{" "}
+						{format(date.to, "LLL dd, y")}
+						</>
+					) : (
+						format(date.from, "LLL dd, y")
+					)
+					) : (
+					<span>Pick a date</span>
+					)}
+				</Button>
+				</PopoverTrigger>
+				<PopoverContent className="w-auto p-0" align="start">
+				<Calendar
+					initialFocus
+					mode="range"
+					defaultMonth={date?.from}
+					selected={date}
+					onSelect={setDate}
+					numberOfMonths={2}
+				/>
+				</PopoverContent>
+			</Popover>
+			</div>
+	  	<div className="flex flex-row justify-around w-[300px] text-sm mb-2">
+			<div className="hover:underline" onClick={() => handleRange("1w")}>1w</div>
+			<div className="hover:underline" onClick={() => handleRange("1m")}>1m</div>
+			<div className="hover:underline" onClick={() => handleRange("3m")}>3m</div>
+			<div className="hover:underline" onClick={() => handleRange("6m")}>6m</div>
+			<div className="hover:underline" onClick={() => handleRange("1y")}>1y</div>
+			<div className="hover:underline" onClick={() => handleRange("ALL")}>ALL</div>
+	  	</div>
+    </div>
+		)
 	}
 
 
@@ -97,21 +212,57 @@ const DashboardEntry = () => {
 		)
 
 	}
+
+	useEffect(() => {
+		var filterData = rawdata
+		var draftData: Log[] = []
+
+		var dateFrom = new Date()
+		var dateTo = new Date()
+
+		if (date != undefined && date.from != undefined && date.to != undefined) {
+			dateFrom = date.from
+			dateTo = date.to	
+		}
+
+
+		var dateFromTimestamp = new Date(dateFrom).getTime();
+		var dateToTimestamp = new Date(dateTo).getTime();
+
+		filterData.forEach((data) => {
+			var timestamp = new Date(data.timestamp).getTime();
+
+			if (timestamp >= dateFromTimestamp && timestamp <= dateToTimestamp) {
+				draftData.push(data)
+			} 
+		}
+		)
+
+
+
+
+
+		setData(draftData)
+	}, [date])
+
+
 	
 
 	return (
 		<Card>
-		<CardHeader>
-		  <CardTitle>Analytics</CardTitle>
-		  <CardDescription>
-			Data is everything.
-		  </CardDescription>
-		</CardHeader>
+			<CardHeader>
+				<CardTitle className="text-center">Analytics</CardTitle>
+			</CardHeader>
 		
 
 		<CardContent className="space-y-2">
 
-			  { (data.length > 0) && <div><AnalyticsCard /></div> }
+			{ (rawdata.length > 0) && 
+				<div>
+					<DatePick />
+					<AnalyticsCard data={data} /> 
+				</div> 
+			}
 
 		<Table className="w-[700px]">
 			<TableHeader>
@@ -159,3 +310,5 @@ const DashboardEntry = () => {
 	)}
 
 export default DashboardEntry;
+
+

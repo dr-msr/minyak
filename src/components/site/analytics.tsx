@@ -15,12 +15,11 @@ import { getPrice } from "@/lib/utils";
 
 
 
+interface AnalyticsCardProps {
+	data: Log[];
+}
+export const AnalyticsCard = (data : AnalyticsCardProps) => {
 
-
-export const AnalyticsCard = () => {
-
-	const context = useData();
-	const data : Log[] = context.data.Log;
 
 	function getLitreUsage( amount: { unit: string; value: number; }, price : PriceData, ron : string) {
 		
@@ -58,9 +57,9 @@ export const AnalyticsCard = () => {
 
 	function getAverageFuelConsumption() {
 		
-		if (data.length > 1) {
-			const totalKm = data[data.length - 1].odometer - data[0].odometer
-			const totalLitre = data.slice(1).map((data) => getLitreUsage(data.amount, data.price, data.ron)).reduce((a, b) => a + b, 0);
+		if (data.data.length > 1) {
+			const totalKm = data.data[data.data.length - 1].odometer - data.data[0].odometer
+			const totalLitre = data.data.slice(1).map((data) => getLitreUsage(data.amount, data.price, data.ron)).reduce((a, b) => a + b, 0);
 			return (totalKm / totalLitre).toFixed(2)
 		
 		} else {
@@ -68,29 +67,30 @@ export const AnalyticsCard = () => {
 		}
 	}
 
-	const chart_consumption = data.map((data) => ({ 
+	const chart_consumption = data.data.map((data) => ({ 
 		'Consumption (km/L)': data.consumption.toFixed(2),
 		'date': new Date(data.timestamp).toLocaleDateString('en-MY', { day: 'numeric', month: 'short' })
 	}))
 
 	const getTotalFuel = () => {
 		var totalFuel = 0
-		for (var i = 0; i < data.length; i++) {
-			totalFuel += getLitreUsage(data[i].amount, data[i].price, data[i].ron)
+		for (var i = 0; i < data.data.length; i++) {
+			totalFuel += getLitreUsage(data.data[i].amount, data.data[i].price, data.data[i].ron)
 		}
 		return totalFuel.toFixed(2)
 	}
 
 	const getTotalCost = () => {
 		var totalCost = 0
-		for (var i = 0; i < data.length; i++) {
-			totalCost += getPriceUsage(data[i].amount, data[i].price, data[i].ron)
+		for (var i = 0; i < data.data.length; i++) {
+			totalCost += getPriceUsage(data.data[i].amount, data.data[i].price, data.data[i].ron)
 		}
 		return totalCost.toFixed(2)
 	}
 
 	const getDateRange = () => {
-		return `${new Date(data[0].timestamp).toLocaleDateString('en-MY')} - ${new Date(data[data.length-1].timestamp).toLocaleDateString('en-MY')}`
+		if (data.data.length === 0) return ""
+		return `${new Date(data.data[0].timestamp).toLocaleDateString('en-MY')} - ${new Date(data.data[data.data.length-1].timestamp).toLocaleDateString('en-MY')}`
 	}
 
   return (
@@ -148,7 +148,7 @@ export const AnalyticsCard = () => {
 				<List>
 					<ListItem>
 					<span>Total Journey Made</span>
-					<span>{data[data.length-1].odometer - data[0].odometer } km</span>
+					<span>{(data.data.length > 0) && data.data[data.data.length-1].odometer - data.data[0].odometer } km</span>
 					</ListItem>
 					<ListItem>
 					<span>Total Fuel Consumed</span>
