@@ -3,6 +3,7 @@ import { Button } from "../ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
+import { Text } from "@tremor/react"
 import { Separator } from "../ui/separator"
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group"
 import { useEffect, useState } from "react"
@@ -223,15 +224,14 @@ export const LogEntry = () => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Isi Minyak</CardTitle>
+				<CardTitle className="text-center">Odometer</CardTitle>
 			</CardHeader>
 	  
 	  	<CardContent className="space-y-2">
 
-			<div className="space-y-1 text-center">
-				<Label htmlFor="name">Odometer</Label>
+			<div className="space-y-2 text-center">
 				<Input 
-					style={{textAlign:"center", fontSize:28, padding:5}} 
+					style={{textAlign:"center", fontSize:28, padding:5, marginBottom:20}} 
 					autoFocus 
 					type="number" 
 					id="odometer" 

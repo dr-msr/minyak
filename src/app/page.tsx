@@ -2,9 +2,12 @@
 
 import  DataConversion from "@/components/site/dataConversion";
 import { Footer } from "@/components/site/footer";
+import Header from "@/components/site/header";
 import MainEntry from "@/components/site/mainEntry";
 import { useData } from "@/data/context";
+import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Text } from "@tremor/react"
 
 export default function Home() {
 
@@ -29,7 +32,11 @@ export default function Home() {
 			 isData ? ( 
 				<>
 					<MainEntry />
+					<div>
+						<div className="flex flex-row items-center justify-center gap-1"><Text>Setting </Text><ChevronDown size={12} /></div>
 					<Footer />
+
+					</div>
 				</> 
 				) : (
 					<DataConversion success={setIsData} />
