@@ -70,7 +70,7 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
 			setLoadData(data);
 		})
 		}
-	, [])
+	, [,successLoad])
 
 	useEffect(() => {
 		const newData : DataType["latest"] | null = convertData(loadData)
@@ -189,7 +189,7 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
             <span>Backup</span>
           </CommandItem> }
 			<CommandItem>
-      		<AlertRestore success={setSuccessLoad} />      
+      		<AlertRestore success={(value) => success(value)} />      
 			</CommandItem>
         </CommandGroup>
         <CommandSeparator />

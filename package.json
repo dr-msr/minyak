@@ -37,6 +37,7 @@
     "next-themes": "^0.2.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-lottie": "^1.2.4",
     "short-unique-id": "^5.0.3",
     "sonner": "^1.4.0",
     "tailwind-merge": "^2.2.1",
