@@ -20,28 +20,31 @@ const MainEntry = () => {
 	});
 
 return (
-	<div {...swipez} className="flex flex-col h-full">
-    <Tabs orientation="horizontal" defaultValue="log" value={currentContent} className="w-[400px]">
+	
+    <Tabs orientation="horizontal" defaultValue="log" value={currentContent} onValueChange={(value) => setCurrentContent(value)} className="w-[400px]">
 		<Header />
 
     	<TabsList className="grid w-full grid-cols-2">
         	<TabsTrigger value="log">Log Entry</TabsTrigger>
         	<TabsTrigger value="dashboard">Dashboard</TabsTrigger>
     	</TabsList>
-
+		
     	<TabsContent value="log">
+		<div {...swipez} className="flex flex-col h-full">
 			<div className="flex flex-col gap-2">
 				<LogEntry />
 				<FrontNews />
 			</div>
+			</div>
 		</TabsContent>
+	
 
     	<TabsContent value="dashboard">
 			<DashboardEntry />
       	</TabsContent>
 
     </Tabs>
-	</div>
+	
 )}
 
 export default MainEntry

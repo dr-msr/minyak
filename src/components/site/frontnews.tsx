@@ -9,9 +9,9 @@ const FrontNews = () => {
 				<p className="text-gray-500">This is the front news</p>
 				<List className="mt-2 p-2">
 					
-					<ListItem>Item 1</ListItem>
-					<ListItem>Item 2</ListItem>
-					<ListItem>Item 3</ListItem>
+					<ListItem>{">> "}Item 1</ListItem>
+					<ListItem>{">> "}Item 2</ListItem>
+					<ListItem>{">> "}Item 3</ListItem>
 				</List>
 			</div>
 			
