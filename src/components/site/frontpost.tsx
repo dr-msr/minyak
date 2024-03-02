@@ -9,7 +9,7 @@ import ReactMarkdown from 'react-markdown';
 import { Button } from "../ui/button"
 import { Badge, badgeVariants } from "../ui/badge"
 import { ExternalLink } from "lucide-react"
-import { getArticles } from "@/articles/util"
+import { getArticles, getPath } from "@/articles/util"
 
 
 
@@ -50,6 +50,12 @@ const FrontPost = () => {
 
 	}
 
+const testPath = async () => {
+	const bacaan = await getPath()
+		console.log(bacaan)
+
+}		
+
 	
 
 
@@ -77,6 +83,7 @@ const FrontPost = () => {
 
 	useEffect(() => {
     	fetchPost()
+		testPath()
 	},[])
 
 
@@ -161,5 +168,4 @@ const FrontPost = () => {
 }
 
 export default FrontPost
-
 

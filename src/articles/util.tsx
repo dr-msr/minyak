@@ -5,6 +5,11 @@ import path from 'path';
 import matter from 'gray-matter';
 import { Post } from '@/components/site/frontpost';
 
+export async function getPath() {
+	const postsDirectory = path.join(process.cwd(),'/articles/');
+	return postsDirectory
+	
+}
 
 export async function getArticles() {
 	const postsDirectory = path.join(process.cwd(),'/articles/');
