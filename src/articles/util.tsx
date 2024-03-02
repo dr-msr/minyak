@@ -15,20 +15,25 @@ export async function getFile(file: string) {
 
 export async function getArticles() {
     const postsDirectory = process.env.NEXT_PUBLIC_HOST + '/articles/';
-    const filenames = [ "001.md", "002.md", "003.md" ]
 
-    const posts = await Promise.all(filenames.map(async filename => {
+    let posts = [];
+    let i = 1;
+    while (true) {
+        let filename = String(i).padStart(3, '0') + '.md';
         const filePath = path.join(postsDirectory, filename);
-        const fileContents = await getFile(filePath);
-
-        const { data, content } = matter(fileContents);
-
-        return {
-            filename,
-            data,
-            content,
-        };
-    }));
+        try {
+            const fileContents = await getFile(filePath);
+            const { data, content } = matter(fileContents);
+            posts.push({
+                filename,
+                data,
+                content,
+            });
+            i++;
+        } catch (error) {
+            break;
+        }
+    }
 
     return {
         props: {
