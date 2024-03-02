@@ -5,8 +5,14 @@ import path from 'path';
 import matter from 'gray-matter';
 import { Post } from '@/components/site/frontpost';
 
+
+
 export async function getPath() {
-	const postsDirectory = path.join(process.cwd(),'/articles/');
+	if (!process.env.PWD) {
+		throw new Error('PWD is not defined');
+	  }
+	  
+	const postsDirectory = path.join(process.env.PWD,'/articles/');
 	return postsDirectory
 	
 }
