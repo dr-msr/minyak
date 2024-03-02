@@ -32,11 +32,8 @@ export default function Home() {
 			 isData ? ( 
 				<>
 					<MainEntry />
-					<div>
-						<div className="flex flex-row items-center justify-center gap-1 mt-2"><Text>Menu </Text><ChevronDown size={12} /></div>
 					<Footer />
 
-					</div>
 				</> 
 				) : (
 					<DataConversion success={setIsData} />

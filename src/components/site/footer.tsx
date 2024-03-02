@@ -23,6 +23,9 @@ import { RestoreFile } from "../footer_dialog/restoreFile";
 import { EditPreset } from "../footer_dialog/editPreset";
 import { toast } from "sonner";
 import { ResetData } from "../footer_dialog/resetData";
+import { AboutApp } from "../footer_dialog/about";
+import { AboutDRMSR } from "../footer_dialog/drmsr";
+import { OpenSource } from "../footer_dialog/openSource";
 
 
 export const Footer = () => {
@@ -30,6 +33,7 @@ export const Footer = () => {
 	const [closeRestore, setCloseRestore] = useState(false);
 	const [closeReset, setCloseReset] = useState(false);
 	const [menuValue, setMenuValue]	= useState("");
+	const [closeAbout, setCloseAbout] = useState(false);
 
 	async function initBackup() {
 		let payload = localStorage.getItem('data');
@@ -139,11 +143,37 @@ export const Footer = () => {
 			<MenubarMenu>
 				<MenubarTrigger>About</MenubarTrigger>
 				<MenubarContent>
-					<MenubarItem inset>About This App </MenubarItem>
+					<Dialog>
+						<DialogTrigger asChild>
+							<MenubarItem inset onSelect={(e) => e.preventDefault()}>
+							About This App 
+							</MenubarItem>
+						</DialogTrigger>
+						<AboutApp />
+					</Dialog>
+
 					<MenubarSeparator />
-					<MenubarItem inset>About drmsr</MenubarItem>
+
+					<Dialog>
+						<DialogTrigger asChild>
+							<MenubarItem inset onSelect={(e) => e.preventDefault()}>
+							About drmsr.dev 
+							</MenubarItem>
+						</DialogTrigger>
+						<AboutDRMSR />
+					</Dialog>
+					
 					<MenubarSeparator />
-					<MenubarItem inset>Open Source</MenubarItem>
+
+					<Dialog>
+						<DialogTrigger asChild>
+							<MenubarItem inset onSelect={(e) => e.preventDefault()}>
+							Open Source 
+							</MenubarItem>
+						</DialogTrigger>
+						<OpenSource />
+					</Dialog>
+
 				</MenubarContent>
 			</MenubarMenu>
 		</Menubar>

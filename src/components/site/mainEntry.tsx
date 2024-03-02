@@ -7,6 +7,7 @@ import Header from "./header"
 import { SwipeableHandlers, useSwipeable } from 'react-swipeable';
 import { useState } from "react"
 import FrontNews from "./frontnews"
+import FrontPost from "./frontpost"
 
 
 
@@ -34,6 +35,7 @@ return (
 			<div className="flex flex-col gap-2">
 				<LogEntry />
 				<FrontNews />
+				<FrontPost />
 			</div>
 			</div>
 		</TabsContent>
