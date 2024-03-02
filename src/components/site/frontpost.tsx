@@ -60,6 +60,7 @@ const FrontPost = () => {
 
 
 	const fetchPost = async () => {
+		console.log("Fetching Articles")
 		const post = await getArticles();
 		console.log(post)
 		const draftList : Post[] = []
@@ -127,7 +128,7 @@ const FrontPost = () => {
 
       <DialogDescription>
 	  <ReactMarkdown
-      className="max-h-[70vh] max-w-screen t-0 w-full overflow-y-scroll whitespace-break-spaces	 text-left"
+      className="max-h-[70vh] p-2 max-w-screen t-0 w-full overflow-y-scroll whitespace-break-spaces	 text-left"
       components={{
 		ul: ({node, ...props}) => <ul style={{lineHeight:1}} {...props} />,
 		li: ({node, ...props}) => <li style={{display: 'flex', marginLeft: '1rem'}} {...props}> • {props.children} </li>,

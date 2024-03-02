@@ -1,10 +1,9 @@
 'use server'
 
-import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { Post } from '@/components/site/frontpost';
 
+const filenames = [ "001.md", "002.md", "003.md" ]
 
 
 export async function getFile(file: string) {
@@ -16,24 +15,18 @@ export async function getFile(file: string) {
 export async function getArticles() {
     const postsDirectory = process.env.NEXT_PUBLIC_HOST + '/articles/';
 
-    let posts = [];
-    let i = 1;
-    while (true) {
-        let filename = String(i).padStart(3, '0') + '.md';
+    const posts = await Promise.all(filenames.map(async filename => {
         const filePath = path.join(postsDirectory, filename);
-        try {
-            const fileContents = await getFile(filePath);
-            const { data, content } = matter(fileContents);
-            posts.push({
-                filename,
-                data,
-                content,
-            });
-            i++;
-        } catch (error) {
-            break;
-        }
-    }
+        const fileContents = await getFile(filePath);
+
+        const { data, content } = matter(fileContents);
+
+        return {
+            filename,
+            data,
+            content,
+        };
+    }));
 
     return {
         props: {
