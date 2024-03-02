@@ -7,9 +7,11 @@ import { Post } from '@/components/site/frontpost';
 
 
 export async function getArticles() {
-	const postsDirectory = path.join(process.cwd(),'/articles/');
-	const filenames = fs.readdirSync(postsDirectory);
-	console.log(filenames)
+	const postsDirectory = path.join(process.cwd(),'public/articles/');
+	// const filenames = fs.readdirSync(postsDirectory);
+	// console.log(filenames)
+
+	const filenames = [ "001.md", "002.md", "003.md" ]
   
 	const posts = filenames.map(filename => {
 	  const filePath = path.join(postsDirectory, filename);

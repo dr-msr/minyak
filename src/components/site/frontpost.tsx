@@ -23,7 +23,7 @@ export type Post = {
 	author: string;
   }
   
- 
+
 
 const FrontPost = () => {
 
