@@ -29,7 +29,7 @@ export async function getNews() {
 			newsToday.push(news)
 		}
 
-		return newsToday
+		return newsToday.reverse()
 
 	} catch (error) {
 		console.error('Error fetching news', error)

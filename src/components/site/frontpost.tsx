@@ -116,7 +116,7 @@ const FrontPost = () => {
 
 				</List>
 				<Dialog open={open} onOpenChange={setOpen} >
-  <DialogContent className="t-0">
+  <DialogContent className="p-5">
     <DialogHeader>
 		<div className="text-left">
 		<DialogTitle>
@@ -127,15 +127,15 @@ const FrontPost = () => {
 	</DialogHeader>
 
       <DialogDescription>
-	  <ReactMarkdown
-      className="max-h-[70vh] p-2 max-w-screen t-0 w-full overflow-y-scroll whitespace-break-spaces	 text-left"
-      components={{
-		ul: ({node, ...props}) => <ul style={{lineHeight:1}} {...props} />,
-		li: ({node, ...props}) => <li style={{display: 'flex', marginLeft: '1rem'}} {...props}> • {props.children} </li>,
-      }}
-    >
-      {active?.content}
-    </ReactMarkdown>
+		<ReactMarkdown
+			className="max-h-[70vh] overflow-y-scroll whitespace-pre-wrap text-left"
+			components={{
+			ul: ({node, ...props}) => <ul style={{lineHeight:1}} {...props} />,
+			li: ({node, ...props}) => <li style={{display: 'flex', marginLeft: '1rem'}} {...props}> • {props.children} </li>,
+			}}
+			>
+		{active?.content}
+			</ReactMarkdown>
       </DialogDescription>
 
 	  <DialogFooter>

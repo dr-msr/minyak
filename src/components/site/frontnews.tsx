@@ -27,7 +27,7 @@ const FrontNews = () => {
 
 			{ (news.length > 0) ? (
 				<div className="p-4">
-				<h1 className="text-xl font-bold">News On Minyak, Today</h1>
+				<h1 className="text-xl font-bold">News On Minyak</h1>
 				<List className="p-2">
 					
 					{ news.map((item, index) => (
