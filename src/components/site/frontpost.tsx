@@ -5,29 +5,31 @@ import { Card } from "../ui/card"
 import { getNews, news } from "@/lib/news"
 import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
-import { getArticles } from "@/articles/util"
 import ReactMarkdown from 'react-markdown';
 import { Button } from "../ui/button"
 import { Badge, badgeVariants } from "../ui/badge"
 import { ExternalLink } from "lucide-react"
-
-type Post = {
-	id: string,
-	title: string,
-	type : string,
-	content: string,
-	url : string,
-	author: string,
-}
+import { getArticles } from "@/articles/util"
 
 
 
+// Define a type for a single post
+export type Post = {
+	id: string;
+	title: string;
+	type: string;
+	content: string;
+	url: string;
+	author: string;
+  }
+  
+ 
 
 const FrontPost = () => {
 
 	const [active, setActive] = useState<Post | null>(null)
 	const [open, setOpen] = useState(false)
-	const [Posts, SetPosts] = useState<Post[]>([])
+	const [posts, SetPosts] = useState<Post[]>([])
 
 	function generateBadge(type: string) {
 		switch (type) {
@@ -47,6 +49,8 @@ const FrontPost = () => {
 
 
 	}
+
+	
 
 
 
@@ -81,12 +85,12 @@ const FrontPost = () => {
 		
 		<Card>
 
-			{ (Posts.length > 0) ? (
+			{ (posts.length > 0) ? (
 				<div className="p-4">
 				<h1 className="text-xl font-bold">Articles</h1>
 				<List className="max-h-[400px] overflow-y-auto mt-2">
 					
-					{ Posts.map((post, index) => (
+					{ posts.map((post, index) => (
 						<ListItem 
 							key={index}
 							onClick={() => {
