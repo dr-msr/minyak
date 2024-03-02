@@ -7,39 +7,33 @@ import { Post } from '@/components/site/frontpost';
 
 
 
-export async function getPath() {
-	if (!process.env.PWD) {
-		throw new Error('PWD is not defined');
-	  }
-	  
-	const postsDirectory = path.join(process.env.PWD,'/articles/');
-	return postsDirectory
-	
+export async function getFile(file: string) {
+    const response = await fetch(file);
+    const text = await response.text();
+    return text;
 }
 
 export async function getArticles() {
-	const postsDirectory = path.join(process.cwd(),'/articles/');
-	// const filenames = fs.readdirSync(postsDirectory);
-	// console.log(filenames)
+    const postsDirectory = process.env.NEXT_PUBLIC_HOST + '/articles/';
+    const filenames = [ "001.md", "002.md", "003.md" ]
 
-	const filenames = [ "001.md", "002.md", "003.md" ]
-  
-	const posts = filenames.map(filename => {
-	  const filePath = path.join(postsDirectory, filename);
-	  const fileContents = fs.readFileSync(filePath, 'utf8');
-	  const { data, content } = matter(fileContents);
-  
-	  return {
-		filename,
-		data,
-		content,
-	  };
-	});
-  
-	return {
-	  props: {
-		posts,
-	  },
-	};
-  }
+    const posts = await Promise.all(filenames.map(async filename => {
+        const filePath = path.join(postsDirectory, filename);
+        const fileContents = await getFile(filePath);
+
+        const { data, content } = matter(fileContents);
+
+        return {
+            filename,
+            data,
+            content,
+        };
+    }));
+
+    return {
+        props: {
+            posts,
+        },
+    };
+}
   

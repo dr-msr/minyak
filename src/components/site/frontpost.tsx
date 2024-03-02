@@ -9,7 +9,9 @@ import ReactMarkdown from 'react-markdown';
 import { Button } from "../ui/button"
 import { Badge, badgeVariants } from "../ui/badge"
 import { ExternalLink } from "lucide-react"
-import { getArticles, getPath } from "@/articles/util"
+import { getArticles } from "@/articles/util"
+
+
 
 
 
@@ -50,11 +52,7 @@ const FrontPost = () => {
 
 	}
 
-const testPath = async () => {
-	const bacaan = await getPath()
-		console.log(bacaan)
 
-}		
 
 	
 
@@ -63,6 +61,7 @@ const testPath = async () => {
 
 	const fetchPost = async () => {
 		const post = await getArticles();
+		console.log(post)
 		const draftList : Post[] = []
 		if (post) {
 			post.props.posts.forEach((item) => {
@@ -83,7 +82,6 @@ const testPath = async () => {
 
 	useEffect(() => {
     	fetchPost()
-		testPath()
 	},[])
 
 
