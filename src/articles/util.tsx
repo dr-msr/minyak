@@ -6,7 +6,7 @@ import matter from 'gray-matter';
 
 
 export async function getArticles() {
-	const postsDirectory = path.join(process.cwd(), 'src/app/articles');
+	const postsDirectory = path.join(process.cwd(),'/articles');
 	const filenames = fs.readdirSync(postsDirectory);
   
 	const posts = filenames.map(filename => {
