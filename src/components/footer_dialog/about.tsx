@@ -91,6 +91,13 @@ export const AboutApp  = () => {
 	const [active, setActive] = useState<WebsiteActive | null>(null)
 	const [stats, setStats] = useState<WebsiteStats | null>(null)
 
+	function getAverageTime(stats: WebsiteStats) {
+		const averageseconds = (stats.totaltime.value / (stats.pageviews.value - stats.bounces.value))
+		const minutes = Math.floor(averageseconds / 60)
+		const seconds = Math.floor(averageseconds % 60)
+		return `${minutes}m ${seconds}s`
+	}
+
 	const HealthMetrics = () => {
 		return (
 			<Card>
@@ -99,7 +106,7 @@ export const AboutApp  = () => {
 				<p>Currently online : { (active) && active.x} </p>
 				<p>Pageviews today : { (stats) && stats.pageviews.value} </p>
 				<p>Unique visitors today : { (stats) && stats.uniques.value}</p>
-				<p>Average visit duration : { (stats) && stats.totaltime.value} </p>
+				<p>Average visit duration : { (stats) && getAverageTime(stats)} </p>
 			</div>
 			</Card>
 		)
