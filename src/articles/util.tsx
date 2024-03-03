@@ -49,7 +49,7 @@ export async function updateActive() {
 	return data
 }
 
-export async function updateStats( current : Date) {
+export async function updateStats() {
 	const client = getClient();
 
 	if (!process.env.UMAMI_WEBSITE_ID) {
@@ -60,7 +60,7 @@ export async function updateStats( current : Date) {
 
 	const { data } = await client.getWebsiteStats(process.env.UMAMI_WEBSITE_ID, {
 		startAt: 1677801600000,
-		endAt: current.getMilliseconds(),
+		endAt: 1709498597541,
 		url: "/",
 	});
 	return data
