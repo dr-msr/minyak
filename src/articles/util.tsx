@@ -57,10 +57,13 @@ export async function updateStats() {
 	
 	}
 
+	const now = new Date().getTime();
+	const yesterday = now - 86400000;
+
 
 	const { data } = await client.getWebsiteStats(process.env.UMAMI_WEBSITE_ID, {
-		startAt: 1677801600000,
-		endAt: 1709498597541,
+		startAt: yesterday,
+		endAt: now,
 		url: "/",
 	});
 	return data
