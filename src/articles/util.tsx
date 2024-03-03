@@ -57,15 +57,12 @@ export async function updateStats() {
 	
 	}
 
-	if (!process.env.NEXT_PUBLIC_HOST) {
-		throw new Error('NEXT_PUBLIC_HOST is not set');
-	}
+	const now = new Date();
+	const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-	const now = new Date().getMilliseconds();
-	
 	const { data } = await client.getWebsiteStats(process.env.UMAMI_WEBSITE_ID, {
-		startAt: now - 1000 * 60 * 60 * 24,
-		endAt: now,
+		startAt: yesterday.getMilliseconds(),
+		endAt: now.getMilliseconds(),
 		url: "/",
 	});
 	return data
