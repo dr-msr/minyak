@@ -96,9 +96,9 @@ export const AboutApp  = () => {
 			<Card>
 			<div className="p-2 text-left">
 				<h2 style={{fontWeight:"bold"}}>Metrics</h2>
-				<p>Currently Online : { (active) && active.x} </p>
+				<p>Currently online : { (active) && active.x} </p>
 				<p>Pageviews today : { (stats) && stats.pageviews.value} </p>
-				<p>Unique Visitors today : { (stats) && stats.uniques.value}</p>
+				<p>Unique visitors today : { (stats) && stats.uniques.value}</p>
 				<p>Average visit duration : { (stats) && stats.totaltime.value} </p>
 			</div>
 			</Card>
