@@ -16,7 +16,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { useData } from "@/data/context";
-import { backupData } from "@/data/actions";
+import { backupData, exportCSV, exportHTML } from "@/data/actions";
 import { AlertTriangle } from "lucide-react";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import { RestoreFile } from "../footer_dialog/restoreFile";
@@ -49,6 +49,38 @@ export const Footer = () => {
 			toast.error(result.message);
 		}
 	}
+
+	async function initCSV() {
+		let payload = localStorage.getItem('data');
+		if (!payload) {
+			toast.error("No data found in local storage.");
+			return
+		};
+
+		const result = exportCSV(payload);
+		if (result.status == "SUCCESS") {
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}		
+	}
+
+	async function initHTML() {
+		let payload = localStorage.getItem('data');
+		if (!payload) {
+			toast.error("No data found in local storage.");
+			return
+		};
+
+		const result = exportHTML(payload);
+		if (result.status == "SUCCESS") {
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}		
+	}
+
+
 
 	useEffect(() => {
 		if (closeReset) {
@@ -115,9 +147,8 @@ export const Footer = () => {
 					<MenubarSub>
 						<MenubarSubTrigger>Export</MenubarSubTrigger>
 						<MenubarSubContent>
-							<MenubarItem>CSV</MenubarItem>
-							<MenubarItem>PDF</MenubarItem>
-							<MenubarItem>HTML</MenubarItem>
+							<MenubarItem onClick={() => initCSV()}>CSV</MenubarItem>
+							<MenubarItem onClick={() => initHTML()}>HTML</MenubarItem>
 						</MenubarSubContent>
 					</MenubarSub>
 					<MenubarSeparator />

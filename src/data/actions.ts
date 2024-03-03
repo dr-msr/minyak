@@ -14,6 +14,34 @@ export function validateData( input : DataType["any"]) {
 	}
 }
 
+export function exportCSV( payload : string) {
+	const now = new Date();
+	const today = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+	const file = 'Minyak-Today-Export-' + today ;
+	const csv = JSON.parse(payload)
+	const output = csv.Log
+	exportFromJSON({ data: output, fileName: file, exportType: 'csv' })
+	return {
+		status : "SUCCESS",
+		message : file + ".csv generated.",
+	}
+}
+
+export function exportHTML( payload : string) {
+	const now = new Date();
+	const today = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+	const file = 'Minyak-Today-Export-' + today ;
+	const csv = JSON.parse(payload)
+	const output = csv.Log
+	exportFromJSON({ data: output, fileName: file, exportType: 'html' })
+	return {
+		status : "SUCCESS",
+		message : file + ".html generated.",
+	}
+}
+
+
+
 export function backupData( payload : string) {
 
 	try {

@@ -60,9 +60,7 @@ const FrontPost = () => {
 
 
 	const fetchPost = async () => {
-		console.log("Fetching Articles")
 		const post = await getArticles();
-		console.log(post)
 		const draftList : Post[] = []
 		if (post) {
 			post.props.posts.forEach((item) => {

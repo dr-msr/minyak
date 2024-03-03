@@ -5,6 +5,7 @@ import { Inter as FontSans } from "next/font/google"
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import { DataProvider } from "@/data/context";
+import { Analytics } from "@vercel/analytics/react"
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -33,10 +34,12 @@ export default function RootLayout({
 		<link rel="icon" type="image/png" sizes="32x32" href="/favico/favicon-32x32.png" />
 		<link rel="icon" type="image/png" sizes="16x16" href="/favico/favicon-16x16.png" />
 		<link rel="manifest" href="/favico/site.webmanifest" />
+		<script defer src="https://analytics.eu.umami.is/script.js" data-website-id="73eb3fc3-3fe2-4bb7-8ed1-07be7a6acd0f"></script>
 		</head>
       <body className={cn("min-h-screen bg-background font-sans antialiased",fontSans.variable)}>
 		<DataProvider>{children}</DataProvider>      
 	  <Toaster richColors  />
+	  <Analytics />
 </body>
     </html>
   );
