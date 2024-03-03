@@ -49,7 +49,7 @@ export async function updateActive() {
 	return data
 }
 
-export async function updateStats() {
+export async function updateStats( current : Date) {
 	const client = getClient();
 
 	if (!process.env.UMAMI_WEBSITE_ID) {
@@ -57,12 +57,11 @@ export async function updateStats() {
 	
 	}
 
-	const now = new Date();
-	const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+	const yesterday = new Date(current.getTime() - 24 * 60 * 60 * 1000);
 
 	const { data } = await client.getWebsiteStats(process.env.UMAMI_WEBSITE_ID, {
 		startAt: yesterday.getMilliseconds(),
-		endAt: now.getMilliseconds(),
+		endAt: current.getMilliseconds(),
 		url: "/",
 	});
 	return data

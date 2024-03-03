@@ -113,7 +113,8 @@ export const AboutApp  = () => {
 		updateActive().then((res) => {
 			setActive(res)
 		})
-		updateStats().then((res) => {
+		const current = new Date();
+		updateStats(current).then((res) => {
 			setStats(res)
 		})
 	},[])
