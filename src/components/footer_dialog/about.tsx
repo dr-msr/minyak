@@ -10,6 +10,12 @@ import {
 } from "@/components/ui/dialog"
 import { Card } from "../ui/card"
 import { FacebookShare, TwitterShare, WhatsappShare } from 'react-share-kit'
+import { useEffect, useState } from "react";
+import { WebsiteActive, WebsiteStats, getClient } from '@umami/api-client';
+import { updateActive, updateStats } from "@/articles/util";
+
+
+
 
 
 
@@ -45,18 +51,7 @@ const Features = () => {
 	)
 } 
 
-const HealthMetrics = () => {
-	return (
-		<Card>
-		<div className="p-2 text-left">
-			<h2 style={{fontWeight:"bold"}}>Metrics</h2>
-			<p>Pageviews today : </p>
-			<p>Visitors today : </p>
-			<p>Average visit duration : </p>
-		</div>
-		</Card>
-	)
-}
+
 
 const Share = () => {
 	return (
@@ -93,6 +88,38 @@ const Share = () => {
 				
 
 export const AboutApp  = () => {
+	const [active, setActive] = useState<WebsiteActive | null>(null)
+	const [stats, setStats] = useState<WebsiteStats | null>(null)
+
+	const HealthMetrics = () => {
+		return (
+			<Card>
+			<div className="p-2 text-left">
+				<h2 style={{fontWeight:"bold"}}>Metrics</h2>
+				<p>Currently Online : { (active) && active.x} </p>
+				<p>Pageviews today : { (stats) && stats.pageviews.value} </p>
+				<p>Unique Visitors today : { (stats) && stats.uniques.value}</p>
+				<p>Average visit duration : { (stats) && stats.totaltime.value} </p>
+			</div>
+			</Card>
+		)
+	}
+
+	
+
+
+
+	useEffect(() => {
+		updateActive().then((res) => {
+			setActive(res)
+		})
+		updateStats().then((res) => {
+			setStats(res)
+		})
+	},[])
+
+
+	
 
 
   return (

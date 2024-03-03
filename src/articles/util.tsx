@@ -2,6 +2,7 @@
 
 import path from 'path';
 import matter from 'gray-matter';
+import { getClient } from '@umami/api-client';
 
 const filenames = [ "001.md", "002.md", "003.md" ]
 
@@ -35,3 +36,37 @@ export async function getArticles() {
     };
 }
   
+
+export async function updateActive() {
+	const client = getClient();
+
+	if (!process.env.UMAMI_WEBSITE_ID) {
+		throw new Error('UMAMI_WEBSITE_ID is not set');
+	
+	}
+	
+	const { data } = await client.getWebsiteActive(process.env.UMAMI_WEBSITE_ID);
+	return data
+}
+
+export async function updateStats() {
+	const client = getClient();
+
+	if (!process.env.UMAMI_WEBSITE_ID) {
+		throw new Error('UMAMI_WEBSITE_ID is not set');
+	
+	}
+
+	if (!process.env.NEXT_PUBLIC_HOST) {
+		throw new Error('NEXT_PUBLIC_HOST is not set');
+	}
+
+	const now = new Date().getMilliseconds();
+	
+	const { data } = await client.getWebsiteStats(process.env.UMAMI_WEBSITE_ID, {
+		startAt: now - 1000 * 60 * 60 * 24,
+		endAt: now,
+		url: process.env.NEXT_PUBLIC_HOST,
+	});
+	return data
+}
