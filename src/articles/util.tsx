@@ -66,7 +66,7 @@ export async function updateStats() {
 	const { data } = await client.getWebsiteStats(process.env.UMAMI_WEBSITE_ID, {
 		startAt: now - 1000 * 60 * 60 * 24,
 		endAt: now,
-		url: process.env.NEXT_PUBLIC_HOST,
+		url: "/",
 	});
 	return data
 }
