@@ -36,10 +36,14 @@ import { DataType, defaultData } from "@/data/version"
 import { convertData } from "@/data/conversion"
 import { useData } from "@/data/context"
 import { toast } from "sonner"
-import { backupData, restoreFile } from "@/data/actions"
+import { backupData, exportCSV, exportHTML, restoreFile } from "@/data/actions"
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
 import { AlertRestore } from "./alertRestore"
+import { FileCode2, Sheet, UploadCloud } from "lucide-react"
+import { Dialog, DialogTrigger } from "../ui/dialog"
+import { MenubarItem } from "../ui/menubar"
+import { RestoreFile } from "../footer_dialog/restoreFile"
 
 interface DataConversionProps {
 	success: (value: boolean) => void;
@@ -54,6 +58,8 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
 	const [parsedFile, setParsedFile] = useState<DataType["latest"] | null>(null)
 	const context = useData();
 	const [successLoad, setSuccessLoad] = useState(false);
+	const [closeRestore, setCloseRestore] = useState(false);
+
 	
 
 
@@ -125,7 +131,35 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
 
 
 
+	async function initCSV() {
+		let payload = localStorage.getItem('data');
+		if (!payload) {
+			toast.error("No data found in local storage.");
+			return
+		};
 
+		const result = exportCSV(payload);
+		if (result.status == "SUCCESS") {
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}		
+	}
+
+	async function initHTML() {
+		let payload = localStorage.getItem('data');
+		if (!payload) {
+			toast.error("No data found in local storage.");
+			return
+		};
+
+		const result = exportHTML(payload);
+		if (result.status == "SUCCESS") {
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}		
+	}
 
 
 		
@@ -200,22 +234,31 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
             <DownloadIcon className="mr-2 h-4 w-4" />
             <span>Backup</span>
           </CommandItem> }
-			<CommandItem>
-      		<AlertRestore success={(value) => success(value)} />      
-			</CommandItem>
+			
+		  <Dialog open={closeRestore} onOpenChange={setCloseRestore}>
+						<DialogTrigger asChild>
+							<CommandItem onSelect={() => setCloseRestore(true)}>
+							<UploadIcon className="mr-2 h-4 w-4" />
+
+								Restore
+							</CommandItem>
+						</DialogTrigger>
+						<RestoreFile close={(value) => {
+							setCloseRestore(!value);
+							success(value)
+						} } />
+					</Dialog>
+
+
         </CommandGroup>
         <CommandSeparator />
         { loadData.Version && <CommandGroup heading="Export Data">
-          <CommandItem>
-            <PersonIcon className="mr-2 h-4 w-4" />
+          <CommandItem onSelect={() => initCSV()}>
+            <Sheet className="mr-2 h-4 w-4" />
             <span>CSV</span>
           </CommandItem>
-          <CommandItem>
-            <EnvelopeClosedIcon className="mr-2 h-4 w-4" />
-            <span>PDF</span>
-          </CommandItem>
-          <CommandItem>
-            <GearIcon className="mr-2 h-4 w-4" />
+          <CommandItem onSelect={() => initHTML()}>
+            <FileCode2 className="mr-2 h-4 w-4" />
             <span>HTML</span>
           </CommandItem>
         </CommandGroup> }
