@@ -10,16 +10,17 @@ import {
 } from "@/components/ui/dialog"
 import { Card } from "../ui/card"
 import { FacebookShare, TwitterShare, WhatsappShare } from 'react-share-kit'
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { WebsiteActive, WebsiteStats, getClient } from '@umami/api-client';
 import { updateActive, updateStats } from "@/articles/util";
-
-
-
-
+import { Skeleton } from "../ui/skeleton";
+import * as packageJson from '../../../package.json';
 
 
 const description = "Minyak.today is a free, fully web-based application designed for vehicle owners in Malaysia. The app allows users to log their fueling sessions, and it automatically calculates their fuel consumption rate." 
+const appVersion = packageJson.version;
+
+
 
 const Desc = () => {
 	return (
@@ -31,7 +32,6 @@ const Desc = () => {
 	)
 
 }
-
 
 const Features = () => {
 	return (
@@ -50,7 +50,6 @@ const Features = () => {
 		</Card>
 	)
 } 
-
 
 
 const Share = () => {
@@ -85,9 +84,14 @@ const Share = () => {
 	)
 }
 
-				
 
-export const AboutApp  = () => {
+				
+interface AboutProps {
+	dbVersion : string
+	uid : string | undefined
+}
+
+export const AboutApp : React.FC<AboutProps> = ( { dbVersion, uid } ) => {
 	const [active, setActive] = useState<WebsiteActive | null>(null)
 	const [stats, setStats] = useState<WebsiteStats | null>(null)
 
@@ -101,16 +105,48 @@ export const AboutApp  = () => {
 	const HealthMetrics = () => {
 		return (
 			<Card>
+
+			{ (stats) ? (
+				<div className="p-2 text-left">
+					<h2 style={{fontWeight:"bold"}}>Metrics</h2>
+					<p>Currently online : { (active) && active.x} </p>
+					<p>Pageviews today : { (stats) && stats.pageviews.value} </p>
+					<p>Unique visitors today : { (stats) && stats.uniques.value}</p>
+					<p>Average visit duration : { (stats) && getAverageTime(stats)} </p>
+				</div>
+				) : (
+				<div className="p-2 text-left">
+					<h2 style={{ fontWeight: "bold" }}>Metrics</h2>
+					<Skeleton className="w-[100px] h-4 mt-2" />
+					<Skeleton className="w-[110px] h-4 mt-2" />
+					<Skeleton className="w-[120px] h-4 mt-2" />
+					<Skeleton className="w-[150px] h-4 mt-2" />
+				</div>
+			) }	
+			
+			</Card>
+		)
+	}
+
+	const today = new Date()
+
+	const AppConfig = () => {
+		return (
+			<Card>
 			<div className="p-2 text-left">
-				<h2 style={{fontWeight:"bold"}}>Metrics</h2>
-				<p>Currently online : { (active) && active.x} </p>
-				<p>Pageviews today : { (stats) && stats.pageviews.value} </p>
-				<p>Unique visitors today : { (stats) && stats.uniques.value}</p>
-				<p>Average visit duration : { (stats) && getAverageTime(stats)} </p>
+				<h2 style={{fontWeight:"bold"}}>Configurations</h2>
+				<div className="w-full p-2 text-left leading-none bg-gray-100 mt-2">
+							<p><div className="flex flex-row justify-between"><div><code>User ID : </code></div><div><code>{ (uid != undefined) && uid }</code></div></div></p>
+							<p><div className="flex flex-row justify-between"><div><code>App Version : </code></div><div><code>{ appVersion }</code></div></div></p>
+							<p><div className="flex flex-row justify-between"><div><code>Database Version : </code></div><div><code>{ dbVersion }</code></div></div></p>
+							<p><div className="flex flex-row justify-between"><div><code>Updated : </code></div><div><code>{ today.toLocaleDateString("en-MY") }</code></div></div></p>
+						</div> 
 			</div>
 			</Card>
 		)
 	}
+
+
 
 	
 
@@ -130,7 +166,7 @@ export const AboutApp  = () => {
 
 
   return (
-	<DialogContent className="sm:max-w-[425px]">
+	<DialogContent className="sm:max-w-[425px] max-h-[70vh] overflow-y-auto">
 	<DialogHeader>
 	  <DialogTitle>About Minyak.Today</DialogTitle>
 	 
@@ -160,6 +196,7 @@ export const AboutApp  = () => {
 			<Desc />
 			<Features />
 			<HealthMetrics />
+			<AppConfig />
 			<Share />
 		</div>
 

@@ -84,10 +84,22 @@ const DataConversion : React.FC <DataConversionProps> = ( {success}) => {
 
 
 	function initConversion(): void {
+
+			
+
 		if (convertedData) {
-			localStorage.setItem('data', JSON.stringify(convertedData));
-			success(true);
-		
+			try {
+				localStorage.setItem('data', JSON.stringify(convertedData));
+				
+				if (context.initData()) {
+					success(true)
+				}
+				
+				
+			} catch (error) {
+				toast.error("Failed to convert data. " + error)
+			}
+
 		} else {
 			context.emptyData(),
 			toast.success("Data has been reset.")

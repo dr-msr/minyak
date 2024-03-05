@@ -1,20 +1,33 @@
-import { d001, d002, d003 } from './defaults'
+import { d001, d002, d003, d1 } from './defaults'
 
 export type DataType = {
-	latest : v003,
+	latest : v1,
 	"0.0.1" : v001,
 	"0.0.2" : v002,
 	"0.0.3" : v003,
+	"1.0.0" : v1,
 	any : any,
 }
 
 export const defaultData: DataType = {
-	latest: d003,
+	latest: d1,
 	"0.0.1": d001,
 	'0.0.2': d002,
 	"0.0.3" : d003,
+	"1.0.0" : d1,
 	any: {}
 } 
+
+export type v1 = {
+	Version : string,
+	UUID : string,
+	UpdatedAt : Date,
+	Setting : Setting,
+	Log : Log[],
+	PriceData : PriceData[],
+	Vehicle : Vehicle[],
+	Signature? : string,
+}
 
 export type v003 = {
 	Version : string,

@@ -180,7 +180,7 @@ export const Footer = () => {
 							About This App 
 							</MenubarItem>
 						</DialogTrigger>
-						<AboutApp />
+						<AboutApp dbVersion={context.data.Version} uid={context.data.UUID} />
 					</Dialog>
 
 					<MenubarSeparator />

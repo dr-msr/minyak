@@ -18,6 +18,7 @@ import { DataType, defaultData } from "@/data/version"
 import { Textarea } from "@/components/ui/textarea"
 import { convertData } from "@/data/conversion"
 import { useData } from "@/data/context"
+import { set } from "date-fns"
 
 interface AlertRestoreProps {
 	success : (value: boolean) => void;
@@ -31,6 +32,7 @@ export const AlertRestore : React.FC<AlertRestoreProps> = ( {success}) => {
 	const [filename, setFilename] = useState<string | undefined>("");
 	const [fileversion, setFileversion] = useState<string | undefined>("");
 	const [parsedData, setParsedData] = useState<DataType["latest"] | null>(null);
+	const [filedate, setFileDate] = useState<Date | undefined>(undefined);
 
 	const context = useData();
 
@@ -46,11 +48,11 @@ export const AlertRestore : React.FC<AlertRestoreProps> = ( {success}) => {
 			}
 
 			const convertedData = convertData(data)
-			console.log(convertedData)
 
 
 			if (convertedData) {
-				setFileversion(convertedData.Version)
+				setFileversion(data.Version)
+				setFileDate(data.UpdatedAt)
 				setParsedData(convertedData)
 				setIsOpen(true)
 			} else {
@@ -100,7 +102,7 @@ export const AlertRestore : React.FC<AlertRestoreProps> = ( {success}) => {
 						<div className="w-full p-2 border text-left max-h-[300px] overflow-scroll">
 							<p><code>Loading... {filename} </code></p>
 							<p><code>Savefile version : {fileversion} {"("}Latest : {defaultData.latest.Version}{")"}</code></p>
-							<p><code>Updated at : {new Date(parsedData.UpdatedAt).toLocaleDateString("en-MY")}</code></p>
+							<p><code>{ (filedate != undefined) && "Savefile updated at : " + new Date(filedate).toLocaleDateString("en-MY")}</code></p>
 							<p><code>==========</code></p>
 							<p><code>Importing...</code></p>
 							{parsedData.Log.map((log, index) => {

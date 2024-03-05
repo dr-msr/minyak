@@ -27,7 +27,7 @@ export const ResetData : React.FC<ResetDataProps> = ({success}) => {
 	function handleReset() {
 		
 		try {
-
+			localStorage.clear();
 			if (context.initData()) {
 				toast.success("Database cleared. New data reinitiated successfully.");
 				success(true)

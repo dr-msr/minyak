@@ -9,6 +9,7 @@ import { Dialog } from "@radix-ui/react-dialog";
 import { DialogContent, DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import generateUniqueId from "generate-unique-id";
 
 interface DataHandler  {
 
@@ -48,11 +49,19 @@ export const DataProvider : React.FC<DataProviderProps> = ({ children }) => {
 	const initData = () => {
 		let payload = localStorage.getItem('data');
 		if (!payload) {
-			payload = JSON.stringify(defaultData.latest);
+			const uuid = generateUniqueId({
+				length: 8,
+				useLetters: true
+			  });
+
+			const draftData = defaultData.latest
+			draftData.UUID = "id-" + uuid
+			  
+			payload = JSON.stringify(draftData);
 			console.log("Saved data : Empty")
-			console.log("Initializing default data with version : " + defaultData.latest.Version)
+			console.log("Initializing default data with version : " + draftData.Version)
 			localStorage.setItem('data', payload);
-			setData(defaultData.latest);
+			setData(draftData);
 			return true
 		}
 
