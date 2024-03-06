@@ -40,6 +40,7 @@ const Features = () => {
 			<h2 style={{fontWeight:"bold"}}>Features</h2>
 			<ul>
 				<li>• Log fueling sessions</li>
+				<li>• Retrieve & view latest fuel price</li>
 				<li>• Calculate fuel consumption rate</li>
 				<li>• View fuel consumption history</li>
 				<li>• View fuel consumption statistics</li>

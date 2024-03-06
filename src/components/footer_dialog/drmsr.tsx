@@ -8,6 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import Image from 'next/image'
+import profilePic from '../../../public/drmsr.jpg'
+
 
 
 
@@ -21,7 +24,15 @@ export const AboutDRMSR  = () => {
 	</DialogHeader>
 
 	<DialogDescription>
-		Who is DRMSR
+		<div className="flex items-center justify-center">
+			<Image
+			src={profilePic}
+			width={200}
+			height={200}
+			alt="drmsr.dev"
+			className="rounded-full"
+			/>
+		</div>
 	  </DialogDescription>
 
 
