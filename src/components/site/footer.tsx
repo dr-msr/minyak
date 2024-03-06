@@ -26,6 +26,7 @@ import { ResetData } from "../footer_dialog/resetData";
 import { AboutApp } from "../footer_dialog/about";
 import { AboutDRMSR } from "../footer_dialog/drmsr";
 import { OpenSource } from "../footer_dialog/openSource";
+import { Support } from "../footer_dialog/support";
 
 
 export const Footer = () => {
@@ -207,6 +208,27 @@ export const Footer = () => {
 
 				</MenubarContent>
 			</MenubarMenu>
+
+			<MenubarMenu>
+			<Dialog>
+						<DialogTrigger asChild>
+							<MenubarTrigger>
+							Help 
+							</MenubarTrigger>
+						</DialogTrigger>
+						<Support />
+					</Dialog>
+
+				<MenubarContent>
+			
+
+
+				</MenubarContent>
+			</MenubarMenu>
+
+
+
+
 		</Menubar>
 
 

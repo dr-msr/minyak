@@ -151,6 +151,10 @@ export const AnalyticsCard = (data : AnalyticsCardProps) => {
 					<span>{(data.data.length > 0) && data.data[data.data.length-1].odometer - data.data[0].odometer } km</span>
 					</ListItem>
 					<ListItem>
+					<span>Number of Fueling</span>
+					<span>{data.data.length} sessions</span>
+					</ListItem>
+					<ListItem>
 					<span>Total Fuel Consumed</span>
 					<span>{getTotalFuel()} Litre</span>
 					</ListItem>
