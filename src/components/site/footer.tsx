@@ -1,4 +1,30 @@
-'use client' 
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   footer.tsx                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mrahim@42KL | drmsr.dev <me@drmsr.dev>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/03/09 12:36:24 by mrahim@42KL       #+#    #+#             */
+/*   Updated: 2024/03/09 12:36:36 by mrahim@42KL      ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/**
+ * Renders the footer component which contains the app settings,
+ * data management options, and general info.
+ *
+ * Contains a Menubar component with menus for:
+ * - Settings - Unit preference, petrol preference
+ * - Data - Backup, restore, export, reset
+ * - About - App info, drmsr.dev info, open source info
+ * - Help - Support options
+ *
+ * Handles backup, export, resetting data.
+ * Opens dialogs for restore, editing presets, about sections.
+ */
+
+'use client';
 
 import {
 	Menubar,
@@ -12,39 +38,37 @@ import {
 	MenubarSubContent,
 	MenubarSubTrigger,
 	MenubarTrigger,
-} from "@/components/ui/menubar";
+} from '@/components/ui/menubar';
 
-import { useEffect, useState } from "react";
-import { useData } from "@/data/context";
-import { backupData, exportCSV, exportHTML } from "@/data/actions";
-import { AlertTriangle } from "lucide-react";
-import { Dialog, DialogTrigger } from "../ui/dialog";
-import { RestoreFile } from "../footer_dialog/restoreFile";
-import { EditPreset } from "../footer_dialog/editPreset";
-import { toast } from "sonner";
-import { ResetData } from "../footer_dialog/resetData";
-import { AboutApp } from "../footer_dialog/about";
-import { AboutDRMSR } from "../footer_dialog/drmsr";
-import { OpenSource } from "../footer_dialog/openSource";
-import { Support } from "../footer_dialog/support";
-
+import { useEffect, useState } from 'react';
+import { useData } from '@/data/context';
+import { backupData, exportCSV, exportHTML } from '@/data/actions';
+import { AlertTriangle } from 'lucide-react';
+import { Dialog, DialogTrigger } from '../ui/dialog';
+import { RestoreFile } from '../footer_dialog/restoreFile';
+import { EditPreset } from '../footer_dialog/editPreset';
+import { toast } from 'sonner';
+import { ResetData } from '../footer_dialog/resetData';
+import { AboutApp } from '../footer_dialog/about';
+import { AboutDRMSR } from '../footer_dialog/drmsr';
+import { OpenSource } from '../footer_dialog/openSource';
+import { Support } from '../footer_dialog/support';
 
 export const Footer = () => {
 	const context = useData();
 	const [closeRestore, setCloseRestore] = useState(false);
 	const [closeReset, setCloseReset] = useState(false);
-	const [menuValue, setMenuValue]	= useState("");
-	const [closeAbout, setCloseAbout] = useState(false);
+	const [menuValue, setMenuValue] = useState('');
 
 	async function initBackup() {
 		let payload = localStorage.getItem('data');
 		if (!payload) {
-			toast.error("No data found in local storage.");
-			return
-		};
+			toast.error('No data found in local storage.');
+			return;
+		}
 
 		const result = backupData(payload);
-		if (result.status == "SUCCESS") {
+		if (result.status == 'SUCCESS') {
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
@@ -54,62 +78,66 @@ export const Footer = () => {
 	async function initCSV() {
 		let payload = localStorage.getItem('data');
 		if (!payload) {
-			toast.error("No data found in local storage.");
-			return
-		};
+			toast.error('No data found in local storage.');
+			return;
+		}
 
 		const result = exportCSV(payload);
-		if (result.status == "SUCCESS") {
+		if (result.status == 'SUCCESS') {
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
-		}		
+		}
 	}
 
 	async function initHTML() {
 		let payload = localStorage.getItem('data');
 		if (!payload) {
-			toast.error("No data found in local storage.");
-			return
-		};
+			toast.error('No data found in local storage.');
+			return;
+		}
 
 		const result = exportHTML(payload);
-		if (result.status == "SUCCESS") {
+		if (result.status == 'SUCCESS') {
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
-		}		
+		}
 	}
-
-
 
 	useEffect(() => {
 		if (closeReset) {
 			context.initData();
 		}
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	},[closeReset])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [closeReset]);
 
 	return (
-
-
-		<Menubar className="min-w-[400px] justify-center mt-2" value={menuValue} onValueChange={(value) => setMenuValue(value)}>
+		<Menubar
+			className='min-w-[400px] justify-center mt-2'
+			value={menuValue}
+			onValueChange={(value) => setMenuValue(value)}
+		>
 			<MenubarMenu>
 				<MenubarTrigger>Setting</MenubarTrigger>
 				<MenubarContent>
 					<MenubarItem>Unit Preference</MenubarItem>
-					<MenubarRadioGroup value={context.data.Setting.unit}
-						onValueChange={(e: string) => context.updateUnit(e)}>
-						<MenubarRadioItem value="RM">RM</MenubarRadioItem>
-						<MenubarRadioItem value="L">Litre</MenubarRadioItem>
+					<MenubarRadioGroup
+						value={context.data.Setting.unit}
+						onValueChange={(e: string) => context.updateUnit(e)}
+					>
+						<MenubarRadioItem value='RM'>RM</MenubarRadioItem>
+						<MenubarRadioItem value='L'>Litre</MenubarRadioItem>
 					</MenubarRadioGroup>
 					<MenubarSeparator />
 
 					<MenubarItem>Petrol Preference</MenubarItem>
-					<MenubarRadioGroup value={context.data.Setting.ron}
-						onValueChange={(e: string) => context.updateRon(e)}>
-						<MenubarRadioItem value="RON95">RON95</MenubarRadioItem>
-						<MenubarRadioItem value="RON97">RON97</MenubarRadioItem>
+					<MenubarRadioGroup
+						value={context.data.Setting.ron}
+						onValueChange={(e: string) => context.updateRon(e)}
+					>
+						<MenubarRadioItem value='RON95'>RON95</MenubarRadioItem>
+						<MenubarRadioItem value='RON97'>RON97</MenubarRadioItem>
 					</MenubarRadioGroup>
 					<MenubarSeparator />
 
@@ -121,9 +149,9 @@ export const Footer = () => {
 						</DialogTrigger>
 						<EditPreset />
 					</Dialog>
-
 				</MenubarContent>
 			</MenubarMenu>
+
 			<MenubarMenu>
 				<MenubarTrigger>Data</MenubarTrigger>
 				<MenubarContent>
@@ -137,101 +165,110 @@ export const Footer = () => {
 								Restore
 							</MenubarItem>
 						</DialogTrigger>
-						<RestoreFile close={(value) => {
-							setCloseRestore(!value);
-							if (value) { setMenuValue(""); }
-						} } />
+						<RestoreFile
+							close={(value) => {
+								setCloseRestore(!value);
+								if (value) {
+									setMenuValue('');
+								}
+							}}
+						/>
 					</Dialog>
 
-
 					<MenubarSeparator />
+
 					<MenubarSub>
 						<MenubarSubTrigger>Export</MenubarSubTrigger>
 						<MenubarSubContent>
-							<MenubarItem onClick={() => initCSV()}>CSV</MenubarItem>
-							<MenubarItem onClick={() => initHTML()}>HTML</MenubarItem>
+							<MenubarItem onClick={() => initCSV()}>
+								CSV
+							</MenubarItem>
+							<MenubarItem onClick={() => initHTML()}>
+								HTML
+							</MenubarItem>
 						</MenubarSubContent>
 					</MenubarSub>
+
 					<MenubarSeparator />
 
 					<Dialog open={closeReset} onOpenChange={setCloseReset}>
 						<DialogTrigger asChild>
-							<MenubarItem onSelect={(e) => e.preventDefault()} className="text-red">
-								<AlertTriangle className="mr-2 stroke-red-900" /> Reset
+							<MenubarItem
+								onSelect={(e) => e.preventDefault()}
+								className='text-red'
+							>
+								<AlertTriangle className='mr-2 stroke-red-900' />{' '}
+								Reset
 							</MenubarItem>
 						</DialogTrigger>
-						<ResetData success={(value) => {
-							setCloseReset(!value);
-							if (value) {
-								setMenuValue("");
-							}
-						} } />
+						<ResetData
+							success={(value) => {
+								setCloseReset(!value);
+								if (value) {
+									setMenuValue('');
+								}
+							}}
+						/>
 					</Dialog>
-
-
-
 				</MenubarContent>
 			</MenubarMenu>
+
 			<MenubarMenu>
 				<MenubarTrigger>About</MenubarTrigger>
 				<MenubarContent>
 					<Dialog>
 						<DialogTrigger asChild>
-							<MenubarItem inset onSelect={(e) => e.preventDefault()}>
-							About This App 
+							<MenubarItem
+								inset
+								onSelect={(e) => e.preventDefault()}
+							>
+								About This App
 							</MenubarItem>
 						</DialogTrigger>
-						<AboutApp dbVersion={context.data.Version} uid={context.data.UUID} />
+						<AboutApp
+							dbVersion={context.data.Version}
+							uid={context.data.UUID}
+						/>
 					</Dialog>
 
 					<MenubarSeparator />
 
 					<Dialog>
 						<DialogTrigger asChild>
-							<MenubarItem inset onSelect={(e) => e.preventDefault()}>
-							About drmsr.dev 
+							<MenubarItem
+								inset
+								onSelect={(e) => e.preventDefault()}
+							>
+								About drmsr.dev
 							</MenubarItem>
 						</DialogTrigger>
 						<AboutDRMSR />
 					</Dialog>
-					
+
 					<MenubarSeparator />
 
 					<Dialog>
 						<DialogTrigger asChild>
-							<MenubarItem inset onSelect={(e) => e.preventDefault()}>
-							Open Source 
+							<MenubarItem
+								inset
+								onSelect={(e) => e.preventDefault()}
+							>
+								Open Source
 							</MenubarItem>
 						</DialogTrigger>
 						<OpenSource />
 					</Dialog>
-
 				</MenubarContent>
 			</MenubarMenu>
 
 			<MenubarMenu>
-			<Dialog>
-						<DialogTrigger asChild>
-							<MenubarTrigger>
-							Help 
-							</MenubarTrigger>
-						</DialogTrigger>
-						<Support />
-					</Dialog>
-
-				<MenubarContent>
-			
-
-
-				</MenubarContent>
+				<Dialog>
+					<DialogTrigger asChild>
+						<MenubarTrigger>Help</MenubarTrigger>
+					</DialogTrigger>
+					<Support />
+				</Dialog>
 			</MenubarMenu>
-
-
-
-
 		</Menubar>
-
-
-
 	);
-}
+};

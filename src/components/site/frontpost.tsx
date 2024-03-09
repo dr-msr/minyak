@@ -1,21 +1,15 @@
 'use client'
 
 import { List, ListItem } from "@tremor/react"
-import { Card } from "../ui/card"
-import { getNews, news } from "@/lib/news"
 import { useEffect, useState } from "react"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
 import ReactMarkdown from 'react-markdown';
 import { Button } from "../ui/button"
-import { Badge, badgeVariants } from "../ui/badge"
+import { Badge } from "../ui/badge"
+import { Card } from "../ui/card"
 import { ExternalLink } from "lucide-react"
 import { getArticles } from "@/articles/util"
 
-
-
-
-
-// Define a type for a single post
 export type Post = {
 	id: string;
 	title: string;
@@ -23,12 +17,9 @@ export type Post = {
 	content: string;
 	url: string;
 	author: string;
-  }
+}
   
-
-
 const FrontPost = () => {
-
 	const [active, setActive] = useState<Post | null>(null)
 	const [open, setOpen] = useState(false)
 	const [posts, SetPosts] = useState<Post[]>([])
@@ -47,17 +38,7 @@ const FrontPost = () => {
 				return (
 					<Badge variant="default" className="mr-2">{type}</Badge>
 				)
-		}
-
-
-	}
-
-
-
-	
-
-
-
+	}}
 
 	const fetchPost = async () => {
 		const post = await getArticles();
@@ -75,22 +56,16 @@ const FrontPost = () => {
 				draftList.push(post)
 			})
 			SetPosts(draftList)
-
-		}
-	}
+	}}
 
 	useEffect(() => {
     	fetchPost()
 	},[])
 
-
-	
 	return (
-		
 		<Card>
-
 			{ (posts.length > 0) ? (
-				<div className="p-4">
+			<div className="p-4">
 				<h1 className="text-xl font-bold">Articles</h1>
 				<List className="max-h-[400px] overflow-y-auto mt-2">
 					
@@ -113,56 +88,46 @@ const FrontPost = () => {
 
 
 				</List>
+	
 				<Dialog open={open} onOpenChange={setOpen} >
-  <DialogContent className="p-5">
-    <DialogHeader>
-		<div className="text-left">
-		<DialogTitle>
-			{active?.title}	
-		</DialogTitle>
-		{active?.author}
-		</div>
-	</DialogHeader>
+					<DialogContent className="p-5">
+						<DialogHeader>
+							<div className="text-left">			
+								<DialogTitle>{active?.title}</DialogTitle>
+								{active?.author}
+							</div>
+						</DialogHeader>
 
-      <DialogDescription>
-		<ReactMarkdown
-			className="max-h-[70vh] overflow-y-scroll whitespace-pre-wrap text-left"
-			components={{
-			ul: ({node, ...props}) => <ul style={{lineHeight:1}} {...props} />,
-			li: ({node, ...props}) => <li style={{display: 'flex', marginLeft: '1rem'}} {...props}> • {props.children} </li>,
-			}}
-			>
-		{active?.content}
-			</ReactMarkdown>
-      </DialogDescription>
+						<DialogDescription>
+							<ReactMarkdown
+								className="max-h-[70vh] overflow-y-scroll whitespace-pre-wrap text-left"
+								components={{
+								ul: ({node, ...props}) => <ul style={{lineHeight:1}} {...props} />,
+								li: ({node, ...props}) => <li style={{display: 'flex', marginLeft: '1rem'}} {...props}> • {props.children} </li>,
+							}}>
+							{active?.content}
+							</ReactMarkdown>
+						</DialogDescription>
 
-	  <DialogFooter>
-		<div className="flex flex-row justify-center gap-2">
-			<Button variant="outline" onClick={() => window.open(active?.url,"_blank")} >{(active?.type == "Admin") ? "Open" : "Source"}</Button>
-			<Button variant="outline" onClick={() => setOpen(false)}>Close</Button>
-		</div>
-	  </DialogFooter>
-
-
-  </DialogContent>
-</Dialog>
+						<DialogFooter>
+							<div className="flex flex-row justify-center gap-2">
+								<Button variant="outline" onClick={() => window.open(active?.url,"_blank")} >{(active?.type == "Admin") ? "Open" : "Source"}</Button>
+								<Button variant="outline" onClick={() => setOpen(false)}>Close</Button>
+							</div>
+						</DialogFooter>	
+					</DialogContent>
+				</Dialog>
 			</div>
-
 			) : (
-				<div className="p-4">
+			<div className="p-4">
 				<h1 className="text-xl font-bold">Articles</h1>
 				<List className="p-2">
-					
 					<ListItem>{">> "}Loading...</ListItem>
 				</List>
 			</div>
-			) }
-			
-			
-		</Card>
-		
-	)
-}
+			)}
+		</Card>	
+)}
 
 export default FrontPost
 

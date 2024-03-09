@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge"
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { getClient } from "@umami/api-client";
 
 
 export function cn(...inputs: ClassValue[]) {
@@ -21,4 +22,35 @@ export async function getPrice() {
 	}
   }
 
-  
+
+
+  export async function updateActive() {
+	const client = getClient();
+
+	if (!process.env.UMAMI_WEBSITE_ID) {
+		throw new Error('UMAMI_WEBSITE_ID is not set');
+	}
+	
+	const { data } = await client.getWebsiteActive(process.env.UMAMI_WEBSITE_ID);
+	return data
+}
+
+export async function updateStats() {
+	const client = getClient();
+
+	if (!process.env.UMAMI_WEBSITE_ID) {
+		throw new Error('UMAMI_WEBSITE_ID is not set');
+	
+	}
+
+	const now = new Date().getTime();
+	const yesterday = now - 86400000;
+
+
+	const { data } = await client.getWebsiteStats(process.env.UMAMI_WEBSITE_ID, {
+		startAt: yesterday,
+		endAt: now,
+		url: "/",
+	});
+	return data
+}  

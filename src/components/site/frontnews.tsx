@@ -5,8 +5,6 @@ import { Card } from "../ui/card"
 import { getNews, news } from "@/lib/news"
 import { useEffect, useState } from "react"
 
-
-
 const FrontNews = () => {
 	const [news, SetNews] = useState<news[]>([])
 
@@ -14,8 +12,7 @@ const FrontNews = () => {
 		const news = await getNews();
 		if (news) {
 			SetNews(news)
-		}
-	}
+	}}
 
 	useEffect(() => {
     	fetchNews()
@@ -24,7 +21,6 @@ const FrontNews = () => {
 	return (
 		
 		<Card>
-
 			{ (news.length > 0) ? (
 				<div className="p-4">
 				<h1 className="text-xl font-bold">News On Minyak</h1>
@@ -36,10 +32,10 @@ const FrontNews = () => {
 							onClick={() => window.open(item.link, "_blank")}
 							style={{cursor: "pointer"}}
 							className="hover:bg-gray-100 p-2 rounded-md"
-						
-						>{item.title}</ListItem>
-					)) }
-
+						>
+						{item.title}
+						</ListItem>
+					))}
 
 				</List>
 			</div>
@@ -48,17 +44,12 @@ const FrontNews = () => {
 				<div className="p-4">
 				<h1 className="text-xl font-bold">Berita Minyak Hari Ini</h1>
 				<p className="text-gray-500">This is the front news</p>
-				<List className="p-2">
-					
+				<List className="p-2">				
 					<ListItem>{">> "}Loading...</ListItem>
 				</List>
 			</div>
-			) }
-			
-			
+			)}
 		</Card>
-		
-	)
-}
+)}
 
 export default FrontNews

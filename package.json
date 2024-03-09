@@ -1,6 +1,6 @@
 {
   "name": "minyak",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.18",
     "@headlessui/tailwindcss": "^0.2.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -39,7 +38,6 @@
     "export-from-json": "^1.7.4",
     "generate-unique-id": "^2.0.3",
     "gray-matter": "^4.0.3",
-    "jose": "^5.2.2",
     "lucide-react": "^0.331.0",
     "next": "14.1.0",
     "next-themes": "^0.2.1",
@@ -49,12 +47,9 @@
     "react-github-btn": "^1.4.0",
     "react-lottie": "^1.2.4",
     "react-markdown": "^9.0.1",
-    "react-remark": "^2.1.0",
     "react-share-kit": "^1.1.0",
     "react-swipeable": "^7.0.1",
     "remark": "^15.0.1",
-    "remark-html": "^16.0.1",
-    "short-unique-id": "^5.0.3",
     "sonner": "^1.4.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
@@ -67,9 +62,9 @@
     "@types/react-dom": "^18",
     "@types/react-lottie": "^1.2.10",
     "autoprefixer": "^10.0.1",
+    "depcheck": "^1.4.7",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
-    "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }
