@@ -22,7 +22,7 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Card } from '../ui/card';
 import { ExternalLink } from 'lucide-react';
-import { getArticles } from '@/articles/util';
+import { getArticles, iterateArticles } from '@/articles/util';
 
 export type Post = {
 	id: string;
@@ -37,6 +37,7 @@ const FrontPost = () => {
 	const [active, setActive] = useState<Post | null>(null);
 	const [open, setOpen] = useState(false);
 	const [posts, SetPosts] = useState<Post[]>([]);
+	const [serveroutput, setServeroutput] = useState(["Test", "Test2", "Test3"])
 
 	function generateBadge(type: string) {
 		switch (type) {
@@ -63,6 +64,7 @@ const FrontPost = () => {
 
 	const fetchPost = async () => {
 		const post = await getArticles();
+		console.log(post)
 		const draftList: Post[] = [];
 		if (post) {
 			post.props.posts.forEach((item) => {
@@ -71,8 +73,8 @@ const FrontPost = () => {
 					title: item.data.title,
 					type: item.data.type,
 					content: item.content,
-					url: item.data.author.link,
-					author: item.data.author.name,
+					url: item.data.author?.link,
+					author: item.data.author?.name,
 				};
 				draftList.push(post);
 			});
@@ -81,8 +83,16 @@ const FrontPost = () => {
 		}
 	};
 
+	const probeServer = async () => {
+		const result = await iterateArticles();
+		setServeroutput(result);
+
+	
+	}
+
 	useEffect(() => {
 		fetchPost();
+		probeServer();
 	}, []);
 
 	return (
@@ -178,6 +188,10 @@ const FrontPost = () => {
 					</List>
 				</div>
 			)}
+			{ serveroutput.map((item, index) => (
+				<div key={index}>{item}</div>
+			))}
+			
 		</Card>
 	);
 };

@@ -10,12 +10,12 @@ import path from 'path';
 import matter from 'gray-matter';
 import fs from 'fs';
 
-const articlesPath = path.join(process.cwd(), 'articles/');
-const filenames = fs.readdirSync(articlesPath).filter((file) => {
+const articlesPath = path.join(process.cwd(), 'public/articles/');
+const filenames2 = fs.readdirSync(articlesPath).filter((file) => {
 	return path.extname(file) === '.md';
 });
 
-// const filenames = [ "001.md", "002.md", "003.md" ]
+const filenames = [ "001.md", "002.md", "003.md" ]
 
 export async function getFile(file: string) {
 	const response = await fetch(file);
@@ -23,10 +23,18 @@ export async function getFile(file: string) {
 	return text;
 }
 
+export async function iterateArticles() {
+	const output = filenames2
+	output.push(articlesPath)
+	
+
+	return filenames2;
+}
+
 export async function getArticles() {
 	const postsDirectory = process.env.NEXT_PUBLIC_HOST + '/articles/';
 	const posts = await Promise.all(
-		filenames.map(async (filename) => {
+		filenames2.map(async (filename) => {
 			const filePath = path.join(postsDirectory, filename);
 			const fileContents = await getFile(filePath);
 			const { data, content } = matter(fileContents);
