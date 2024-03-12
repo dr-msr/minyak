@@ -85,6 +85,7 @@ const FrontPost = () => {
 
 	const probeServer = async () => {
 		const result = await iterateArticles();
+		console.log(result)
 		setServeroutput(result);
 
 	
