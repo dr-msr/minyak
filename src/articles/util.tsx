@@ -28,7 +28,7 @@ export async function iterateArticles() {
 	output.push(articlesPath)
 	
 
-	return filenames2;
+	return output;
 }
 
 export async function getArticles() {
