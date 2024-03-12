@@ -10,7 +10,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import fs from 'fs';
 
-const articlesPath = path.join(process.cwd(), 'public/articles');
+const articlesPath = path.join(process.cwd(), 'articles/');
 const filenames = fs.readdirSync(articlesPath).filter((file) => {
 	return path.extname(file) === '.md';
 });
