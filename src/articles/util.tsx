@@ -24,9 +24,7 @@ export async function getFile(file: string) {
 }
 
 export async function iterateArticles() {
-	const output = filenames2
-	output.push(articlesPath)
-	
+	const output = ["satuduatiga"]
 
 	return output;
 }
