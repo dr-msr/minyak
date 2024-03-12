@@ -10,7 +10,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import fs from 'fs';
 
-const articlesPath = path.join(process.cwd(), 'public/articles/');
+const articlesPath = path.resolve('./public/articles/');
 const filenames2 = fs.readdirSync(articlesPath).filter((file) => {
 	return path.extname(file) === '.md';
 });
@@ -23,11 +23,7 @@ export async function getFile(file: string) {
 	return text;
 }
 
-export async function iterateArticles() {
-	const output = ["satuduatiga"]
 
-	return output;
-}
 
 export async function getArticles() {
 	const postsDirectory = process.env.NEXT_PUBLIC_HOST + '/articles/';

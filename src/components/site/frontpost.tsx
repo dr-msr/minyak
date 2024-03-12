@@ -22,7 +22,7 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Card } from '../ui/card';
 import { ExternalLink } from 'lucide-react';
-import { getArticles, iterateArticles } from '@/articles/util';
+import { getArticles } from '@/articles/util';
 
 export type Post = {
 	id: string;
@@ -83,17 +83,8 @@ const FrontPost = () => {
 		}
 	};
 
-	const probeServer = async () => {
-		const result = await iterateArticles();
-		console.log(result)
-		setServeroutput(result);
-
-	
-	}
-
 	useEffect(() => {
 		fetchPost();
-		probeServer();
 	}, []);
 
 	return (
@@ -189,10 +180,6 @@ const FrontPost = () => {
 					</List>
 				</div>
 			)}
-			{ serveroutput.map((item, index) => (
-				<div key={index}>{item}</div>
-			))}
-			
 		</Card>
 	);
 };
