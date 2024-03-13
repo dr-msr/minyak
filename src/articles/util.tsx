@@ -22,7 +22,7 @@ export async function getFile(file: string) {
 
 
 export async function getArticles() {
-	const articlesPath = path.join(process.cwd(), 'articles/');
+	const articlesPath = path.join(process.cwd(), '/vercel/output/articles/');
 	const filenames2 = fs.readdirSync(articlesPath).filter((file) => {
 	return path.extname(file) === '.md';
 	});
