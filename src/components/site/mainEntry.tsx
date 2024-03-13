@@ -1,48 +1,59 @@
-'use client'
+/**
+ * Renders the main entry point for the app using Tabs component for navigation.
+ * Allows swiping between LogEntry and Dashboard tabs.
+ * Renders Header, LogEntry, DashboardEntry, FrontNews, FrontPost components.
+ * Manages current tab state with useState hook.
+ */
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+'use client';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSwipeable } from 'react-swipeable';
-import { useState } from "react"
+import { useState } from 'react';
 
-import DashboardEntry from "./dashboardEntry"
-import LogEntry from "./logEntry"
-import Header from "./header"
-import FrontNews from "./frontnews"
-import FrontPost from "./frontpost"
+import DashboardEntry from './dashboardEntry';
+import LogEntry from './logEntry';
+import Header from './header';
+import FrontNews from './frontnews';
+import FrontPost from './frontpost';
 
 const MainEntry = () => {
-	const [currentContent, setCurrentContent] = useState("log")
+	const [currentContent, setCurrentContent] = useState('log');
 	const swipez = useSwipeable({
-		onSwipedRight : () => setCurrentContent("log"),
-		onSwipedLeft : () => setCurrentContent("dashboard"),
-});
+		onSwipedRight: () => setCurrentContent('log'),
+		onSwipedLeft: () => setCurrentContent('dashboard'),
+	});
 
-return (	
-    <Tabs orientation="horizontal" defaultValue="log" value={currentContent} onValueChange={(value) => setCurrentContent(value)} className="w-[400px]">
+	return (
+		<Tabs
+			orientation='horizontal'
+			defaultValue='log'
+			value={currentContent}
+			onValueChange={(value) => setCurrentContent(value)}
+			className='w-[400px]'
+		>
+			<Header />
 
-		<Header />
+			<TabsList className='grid w-full grid-cols-2'>
+				<TabsTrigger value='log'>Log Entry</TabsTrigger>
+				<TabsTrigger value='dashboard'>Dashboard</TabsTrigger>
+			</TabsList>
 
-    	<TabsList className="grid w-full grid-cols-2">
-        	<TabsTrigger value="log">Log Entry</TabsTrigger>
-        	<TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-    	</TabsList>
-		
-    	<TabsContent value="log">
-			<div {...swipez} className="flex flex-col h-full">
-				<div className="flex flex-col gap-2">
-					<LogEntry />
-					<FrontNews />
-					<FrontPost />
+			<TabsContent value='log'>
+				<div {...swipez} className='flex flex-col h-full'>
+					<div className='flex flex-col gap-2'>
+						<LogEntry />
+						<FrontNews />
+						<FrontPost />
+					</div>
 				</div>
-			</div>
-		</TabsContent>
-	
+			</TabsContent>
 
-    	<TabsContent value="dashboard">
-			<DashboardEntry />
-      	</TabsContent>
+			<TabsContent value='dashboard'>
+				<DashboardEntry />
+			</TabsContent>
+		</Tabs>
+	);
+};
 
-    </Tabs>
-)}
-
-export default MainEntry
+export default MainEntry;

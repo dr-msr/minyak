@@ -1,4 +1,11 @@
 
+/**
+ * Fetches the latest news articles related to "news petrol" in Malaysia from the Google Custom Search API.
+ *
+ * Returns an array of news article objects containing title, description, publish date, and link,
+ * sorted with most recent first.
+ */
+
 
 export type news = {
 	title : string,
@@ -7,15 +14,14 @@ export type news = {
 	link : string,
 }
 
-
-
-
 export async function getNews() {
 
 	try {
 		const newsToday : news[] = []
-
-		const response = await fetch('https://customsearch.googleapis.com/customsearch/v1?key=' + process.env.NEXT_PUBLIC_GOOGLE_API + '&cx=4482e0b9da68d4e66&q= news petrol&cr=countryMY&dateRestrict=w1&num=5')
+		const response = await fetch(
+			'https://customsearch.googleapis.com/customsearch/v1?key=' + 
+			process.env.NEXT_PUBLIC_GOOGLE_API + 
+			'&cx=4482e0b9da68d4e66&q= news petrol&cr=countryMY&dateRestrict=w1&num=5')
 		const data = await response.json()
 		const output = data.items
 

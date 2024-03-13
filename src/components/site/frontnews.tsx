@@ -1,55 +1,63 @@
-'use client'
+/**
+ * FrontNews component fetches and displays news headlines.
+ * - Fetches news data from API on mount.
+ * - Displays news headlines in a list.
+ * - Opens news link in new tab when headline is clicked.
+ * - Shows loading state if data is not fetched yet.
+ */
 
-import { List, ListItem } from "@tremor/react"
-import { Card } from "../ui/card"
-import { getNews, news } from "@/lib/news"
-import { useEffect, useState } from "react"
+'use client';
+
+import { List, ListItem } from '@tremor/react';
+import { Card } from '../ui/card';
+import { getNews, news } from '@/lib/news';
+import { useEffect, useState } from 'react';
 
 const FrontNews = () => {
-	const [news, SetNews] = useState<news[]>([])
+	const [news, SetNews] = useState<news[]>([]);
 
 	const fetchNews = async () => {
 		const news = await getNews();
 		if (news) {
-			SetNews(news)
-	}}
+			SetNews(news);
+		}
+	};
 
 	useEffect(() => {
-    	fetchNews()
-	},[])
+		fetchNews();
+	}, []);
 
 	return (
-		
 		<Card>
-			{ (news.length > 0) ? (
-				<div className="p-4">
-				<h1 className="text-xl font-bold">News On Minyak</h1>
-				<List className="p-2">
-					
-					{ news.map((item, index) => (
-						<ListItem 
-							key={index}
-							onClick={() => window.open(item.link, "_blank")}
-							style={{cursor: "pointer"}}
-							className="hover:bg-gray-100 p-2 rounded-md"
-						>
-						{item.title}
-						</ListItem>
-					))}
-
-				</List>
-			</div>
-
+			{news.length > 0 ? (
+				<div className='p-4'>
+					<h1 className='text-xl font-bold'>News On Minyak</h1>
+					<List className='p-2'>
+						{news.map((item, index) => (
+							<ListItem
+								key={index}
+								onClick={() => window.open(item.link, '_blank')}
+								style={{ cursor: 'pointer' }}
+								className='hover:bg-gray-100 p-2 rounded-md'
+							>
+								{item.title}
+							</ListItem>
+						))}
+					</List>
+				</div>
 			) : (
-				<div className="p-4">
-				<h1 className="text-xl font-bold">Berita Minyak Hari Ini</h1>
-				<p className="text-gray-500">This is the front news</p>
-				<List className="p-2">				
-					<ListItem>{">> "}Loading...</ListItem>
-				</List>
-			</div>
+				<div className='p-4'>
+					<h1 className='text-xl font-bold'>
+						Berita Minyak Hari Ini
+					</h1>
+					<p className='text-gray-500'>This is the front news</p>
+					<List className='p-2'>
+						<ListItem>{'>> '}Loading...</ListItem>
+					</List>
+				</div>
 			)}
 		</Card>
-)}
+	);
+};
 
-export default FrontNews
+export default FrontNews;
