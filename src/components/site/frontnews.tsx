@@ -10,24 +10,24 @@
 
 import { List, ListItem } from '@tremor/react';
 import { Card } from '../ui/card';
-import { getNews, news } from '@/lib/news';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { News, fetchNews } from '../../lib/news';
 
-const FrontNews = () => {
-	const [news, SetNews] = useState<news[]>([]);
+export async function getServerSideProps() {
+	const news = await fetchNews()
+	return { props: { news } }
+  }
 
-	const fetchNews = async () => {
-		const news = await getNews();
-		if (news) {
-			SetNews(news);
-		}
-	};
+const FrontNews = (props: { news: News[]; }) => {
+//	const [news, SetNews] = useState<news[]>([]);
 
-	useEffect(() => {
-		fetchNews();
-	}, []);
+const { data : news } = useQuery({
+    queryKey: ['news'],
+    queryFn: fetchNews,
+    initialData: props.news,
+  })
 
-	return (
+	if (news != undefined) return (
 		<Card>
 			{news.length > 0 ? (
 				<div className='p-4'>

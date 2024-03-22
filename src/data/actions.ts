@@ -91,7 +91,7 @@ export function backupData(payload: string) {
 			(now.getMonth() + 1) +
 			'-' +
 			now.getDate();
-		const file = 'MinyakToday-Backup-' + tmpData.Version + '-' + tmpData.Log[0]?.odometer + '-' + today;
+		const file = 'MinyakToday-Backup-' + tmpData.Version + '-' + tmpData.Log[tmpData.Log.length - 1]?.odometer + '-' + today;
 		tmpData.UpdatedAt = now;
 
 		exportFromJSON({ data: tmpData, fileName: file, exportType: 'json' });

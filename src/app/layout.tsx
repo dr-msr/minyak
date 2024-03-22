@@ -6,6 +6,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { DataProvider } from "@/data/context";
 import { Analytics } from "@vercel/analytics/react"
 import "./globals.css";
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
+import { ReactQueryClientProvider } from "@/lib/queryProvider";
+
 
 const fontSans = Inter({ 
 	subsets: ["latin"],
@@ -18,6 +21,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+	const queryClient = new QueryClient()
+
 	return (
 		<html lang="en">
 			<head>
@@ -28,9 +33,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 			<script defer src="https://analytics.eu.umami.is/script.js" data-website-id="73eb3fc3-3fe2-4bb7-8ed1-07be7a6acd0f"></script>
 			</head>
 		<body className={cn("min-h-screen bg-background font-sans antialiased",fontSans.variable)}>
-			<DataProvider>{children}</DataProvider>      
-	  		<Toaster richColors  />
-	  		<Analytics />
+			<ReactQueryClientProvider>
+				<DataProvider>{children}</DataProvider>      
+				<Toaster richColors  />
+				<Analytics />
+			</ReactQueryClientProvider>
 		</body>
     	</html>
 )}
