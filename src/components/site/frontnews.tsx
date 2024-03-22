@@ -13,7 +13,7 @@ import { Card } from '../ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { News, fetchNews } from '../../lib/news';
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
 	const news = await fetchNews()
 	return { props: { news } }
   }
