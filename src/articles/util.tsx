@@ -8,10 +8,14 @@
 
 import path from 'path';
 import matter from 'gray-matter';
-import fs from 'fs';
 
-
-
+const filenames = [ 
+	"001.md", 
+	"002.md", 
+	"003.md", 
+	"004.md", 
+	"005.md",
+ ]
 
 export async function getFile(file: string) {
 	const response = await fetch(file);
@@ -20,7 +24,6 @@ export async function getFile(file: string) {
 }
 
 export async function getArticles() {
-	const filenames = [ "001.md", "002.md", "003.md", "004.md" ]
 
 	const postsDirectory = process.env.NEXT_PUBLIC_HOST + '/articles/';
 	const posts = await Promise.all(

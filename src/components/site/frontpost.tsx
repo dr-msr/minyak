@@ -143,6 +143,15 @@ const FrontPost = () => {
 												• {props.children}{' '}
 											</li>
 										),
+										b: ({ node, children,...props }) => (
+											<b {...props}>{children}</b>
+										),
+										h1: ({ node, children,...props }) => (
+											<p className="font-bold text-lg">{children}</p>
+										),
+										h2: ({ node, children,...props }) => (
+											<p className="font-bold">{children}</p> 
+										),
 									}}
 								>
 									{active?.content}
