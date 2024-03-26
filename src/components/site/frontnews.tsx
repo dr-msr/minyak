@@ -13,21 +13,18 @@ import { Card } from '../ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { News, fetchNews } from '../../lib/news';
 
-export async function getServerSideProps() {
-	const news = await fetchNews()
-	return { props: { news } }
-  }
-
-const FrontNews = (props: { news: News[]; }) => {
+const FrontNews = () => {
 //	const [news, SetNews] = useState<news[]>([]);
 
 const { data : news } = useQuery({
     queryKey: ['news'],
     queryFn: fetchNews,
-    initialData: props.news,
   })
 
-	if (news != undefined) return (
+
+if (news != undefined) {
+	console.log(news);
+	return (
 		<Card>
 			{news.length > 0 ? (
 				<div className='p-4'>
@@ -59,5 +56,5 @@ const { data : news } = useQuery({
 		</Card>
 	);
 };
-
+}
 export default FrontNews;
