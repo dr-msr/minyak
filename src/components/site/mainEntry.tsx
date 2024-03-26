@@ -43,7 +43,7 @@ const MainEntry = () => {
 				<div {...swipez} className='flex flex-col h-full'>
 					<div className='flex flex-col gap-2'>
 						<LogEntry />
-						<FrontNews news={[]} />
+						<FrontNews />
 						<FrontPost />
 					</div>
 				</div>
